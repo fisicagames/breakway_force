@@ -1,5 +1,4 @@
 import { Scene, VirtualJoystick } from "@babylonjs/core";
-//import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 
 export class InspectorDebugModel {
@@ -9,21 +8,18 @@ export class InspectorDebugModel {
 
     private static setupEventListeners(scene: Scene): void {
         this.toggleDebugCallback = (ev: KeyboardEvent) => {
-            // Shift+d
             if (ev.shiftKey && (ev.key === "d" || ev.key === "D")) {
                 this.toggleInspectorVisibility(scene);
             }
         };
 
         this.toggleCameraCallback = (ev: KeyboardEvent) => {
-            // Shift+c
             if (ev.shiftKey && (ev.key === "c" || ev.key === "C")) {
                 this.toggleCamera(scene);
             }
         };
 
         this.toggleJoystickCallback = (ev: KeyboardEvent) => {
-            // Shift+j
             if (ev.shiftKey && (ev.key === "j" || ev.key === "J")) {
                 this.toggleJoystick();
             }
@@ -35,7 +31,6 @@ export class InspectorDebugModel {
     }
 
     private static toggleCamera(scene: Scene): void {
-        // Trocar entre câmera universal e câmera de acompanhamento
         if (scene.activeCamera === scene.getCameraByName("UniversalCamera")) {
             scene.setActiveCameraByName("FollowCam");
         } else {
@@ -52,7 +47,6 @@ export class InspectorDebugModel {
     }
 
     private static toggleJoystick(): void {
-        // Habilitar ou desabilitar o joystick
         const joystickZIndex = VirtualJoystick.Canvas.style.zIndex;
         if (joystickZIndex === "4") {
             VirtualJoystick.Canvas.style.zIndex = "-1";

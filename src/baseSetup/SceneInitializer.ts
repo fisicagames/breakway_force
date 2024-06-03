@@ -1,14 +1,12 @@
 import "@babylonjs/loaders";
-import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, PBRMaterial, MeshBuilder } from "@babylonjs/core";
+import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, MeshBuilder } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
-
+import { optimizeMaterials } from "./MaterialOptimizer";
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
     private _engine: Engine;
-    private _ground: Mesh;
     private _scene: Scene;
-
 
     public get scene(): Scene {
         return this._scene;
@@ -33,9 +31,9 @@ export class SceneInitializer {
 
         this._scene.activeCamera = followCamera; // Or universalCamera
 
-        const materialNames = ["MaterialX.00X", "MaterialY.00Y"];
-        this.materialListOptimizer(materialNames);
-
+        
+        const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
+        optimizeMaterials(this._scene, materialNames);
 
         await this._scene.whenReadyAsync(); //optional
         this._engine.hideLoadingUI(); //optional
@@ -43,7 +41,6 @@ export class SceneInitializer {
     }
 
     private sceneLoop() {
-
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -52,39 +49,6 @@ export class SceneInitializer {
     private sceneOptimizer() {
         this._scene.skipPointerMovePicking = true;
         this._scene.freezeActiveMeshes(true);
-        //or use this.scene.pointerMoveFastCheck = true
         this._scene.performancePriority = ScenePerformancePriority.BackwardCompatible;
-    }
-
-    private materialListOptimizer(materialNames: string[]) {
-        this._scene.meshes.forEach(mesh => {
-            if (mesh.material && materialNames.indexOf(mesh.material.name) !== -1) {
-                mesh.receiveShadows = false;
-                // mesh.getLODLevels().forEach(lod => {
-                //     if (lod.mesh) {
-                //         lod.mesh.receiveShadows = false;
-                //     }
-                // });
-            }
-        });
-        materialNames.forEach(materialName => {
-            const material = this._scene.getMaterialByName(materialName) as PBRMaterial;
-            if (material) {
-                // Desativar configurações caras
-                material.disableLighting = true;
-                material.reflectionTexture = null;
-                material.refractionTexture = null;
-                material.subSurface.isRefractionEnabled = false;
-                material.subSurface.isTranslucencyEnabled = false;
-                material.subSurface.isScatteringEnabled = false;
-                material.clearCoat.isEnabled = false;
-
-                material.needDepthPrePass = false;
-
-                // Ajustar intensidades conforme necessário
-                material.environmentIntensity = 0.5;
-                material.specularIntensity = 0.5;
-            }
-        });
     }
 }
