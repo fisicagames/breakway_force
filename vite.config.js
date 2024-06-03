@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
-import copy from 'rollup-plugin-copy';
+
+console.log("vite.config.js está sendo lido!");
 
 export default defineConfig({
     server: {
@@ -10,23 +10,8 @@ export default defineConfig({
     },
     esbuild: {
         supported: {
-            'top-level-await': true
+            'top-level-await': true //browsers can handle top-level-await features
         }
     },
-    build: {
-        rollupOptions: {
-            plugins: [
-                copy({
-                    targets: [
-                        { src: 'public/assets/wasm/HavokPhysics.wasm', dest: 'dist/assets/wasm' }
-                    ]
-                })
-            ]
-        }
-    },
-    resolve: {
-        alias: {
-            '@': resolve(__dirname, './src')
-        }
-    }
+  
 });
