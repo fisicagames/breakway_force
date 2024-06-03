@@ -2,6 +2,7 @@ import "@babylonjs/loaders";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, MeshBuilder } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
+import { SceneObjectsInitializer } from "../applicatonLayer/sceneObjectsInitializer";
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
@@ -23,18 +24,22 @@ export class SceneInitializer {
         this.sceneOptimizer();
 
         this._scene.clearColor = Color4.FromHexString("#33334D");
-        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(0.09, 0.1, 1), this._scene);
-        const sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, this._scene);
+        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(0, 0.5, 0), this._scene);
+        
+        //Create a sphere for test purposes:
+        //const sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, this._scene);
 
         const universalCamera = CameraInitializer.createUniversalCamera(this._scene, this._canvas);
-        const followCamera = CameraInitializer.createFollowCamera(this._scene, sphere);
+        const followCamera = CameraInitializer.createFollowCamera(this._scene);
 
-        this._scene.activeCamera = followCamera; // Or universalCamera
-
+        this._scene.activeCamera = universalCamera; // Or followCamera
         
-        const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
-        optimizeMaterials(this._scene, materialNames);
+        const gameObjectsInitializer = new SceneObjectsInitializer(this._scene);
+        gameObjectsInitializer.initialize();
+        
 
+        const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
+        optimizeMaterials(this._scene, materialNames); //optional
         await this._scene.whenReadyAsync(); //optional
         this._engine.hideLoadingUI(); //optional
         this.sceneLoop();
