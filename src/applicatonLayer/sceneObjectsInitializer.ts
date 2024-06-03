@@ -9,14 +9,9 @@ export class SceneObjectsInitializer {
     }
 
     public async initialize(): Promise<void> {
-        // Configuração do motor de física
+        // Configuração do motor de física com localização específica do arquivo WASM
         const havok = await HavokPhysics({
-            locateFile: (path) => {
-                if (path.endsWith('.wasm')) {
-                    return `assets/${path}`; // Certifique-se que o arquivo .wasm está no diretório correto
-                }
-                return path;
-            }
+            locateFile: () => `./assets/wasm/HavokPhysics.wasm`
         });
 
         // Initialize plugin
@@ -24,13 +19,14 @@ export class SceneObjectsInitializer {
 
         // Enable physics in the scene with gravity
         this._scene.enablePhysics(new Vector3(0, -9.8, 0), hk);
+
         // Criação dos objetos
         const plane: Mesh = MeshBuilder.CreateBox("box", { size: 2, width: 8, height: 0.5 }, this._scene);
         plane.position = new Vector3(0, 0, 0);
         new PhysicsBody(plane, PhysicsMotionType.STATIC, false, this._scene); // Adicionando física ao plano
 
         const box: Mesh = MeshBuilder.CreateBox("box", { size: 1, width: 1, height: 1 }, this._scene);
-        box.position = new Vector3(-3, 4.5, 0);
+        box.position = new Vector3(-3, 0.5, 0);
         new PhysicsBody(box, PhysicsMotionType.DYNAMIC, false, this._scene); // Adicionando física à caixa
     }
 }
