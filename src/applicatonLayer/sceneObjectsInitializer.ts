@@ -35,16 +35,23 @@ export class SceneObjectsInitializer {
         const box: Mesh = MeshBuilder.CreateBox("box", { size: 1, width: 1, height: 1 }, this._scene);
         box.position = new Vector3(-3, 2.5, 0);
         const boxAggregate = new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: 1 }, this._scene);
-
+        this.enablePhysicsViewer();
         
     }
 
-    private enablePhysicsViewr() {
+
+    
+    private enablePhysicsViewer() {
         const physicsViewer = new PhysicsViewer();
         for (const mesh of this._scene.rootNodes) {
-            if (mesh.physicsBody) {
+            if (hasPhysicsBody(mesh)) {
                 const debugMesh = physicsViewer.showBody(mesh.physicsBody);
             }
         }
+        //Type guard function:
+        function hasPhysicsBody(mesh: any): mesh is { physicsBody: any } {
+            return mesh && 'physicsBody' in mesh;
+        }
     }
+    
 }
