@@ -1,4 +1,4 @@
-import { Scene, MeshBuilder, Mesh, Vector3, PhysicsBody, PhysicsMotionType, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer } from "@babylonjs/core";
+import { Scene, MeshBuilder, Mesh, Vector3, PhysicsBody, PhysicsMotionType, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, Quaternion, PhysicsShapeSphere } from "@babylonjs/core";
 import HavokPhysics from "@babylonjs/havok";
 
 export class SceneObjectsInitializer {
@@ -35,12 +35,30 @@ export class SceneObjectsInitializer {
         const box: Mesh = MeshBuilder.CreateBox("box", { size: 1, width: 1, height: 1 }, this._scene);
         box.position = new Vector3(-3, 2.5, 0);
         const boxAggregate = new PhysicsAggregate(box, PhysicsShapeType.BOX, { mass: 1 }, this._scene);
-        this.enablePhysicsViewer();
-        
+
+        //Full physics steps:
+        const sphere2 = MeshBuilder.CreateSphere("sphere");
+        sphere2.position = new Vector3(3, 5, 0);
+        const body = new PhysicsBody(sphere2, PhysicsMotionType.DYNAMIC, false, this._scene);
+        body.setMassProperties({
+            mass: 1,
+            centerOfMass: new Vector3(0, 1, 0),
+            inertia: new Vector3(1, 1, 1),
+            inertiaOrientation: new Quaternion(0, 0, 0, 1)
+        });
+
+        const shape = new PhysicsShapeSphere(
+            new Vector3(0, 0, 0), // center of the sphere in local space
+            0.5, // radius of the sphere
+            this._scene // containing scene
+        );
+        body.shape = shape;
+        const material = { friction: 0.2, restitution: 1.0 };
+        shape.material = material;
     }
 
 
-    
+
     private enablePhysicsViewer() {
         const physicsViewer = new PhysicsViewer();
         for (const mesh of this._scene.rootNodes) {
@@ -53,5 +71,5 @@ export class SceneObjectsInitializer {
             return mesh && 'physicsBody' in mesh;
         }
     }
-    
+
 }
