@@ -2,7 +2,7 @@ import "@babylonjs/loaders";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, MeshBuilder } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
-import { SceneObjectsInitializer } from "../applicatonLayer/sceneObjectsInitializer";
+import { ObjectsInitializer } from "../applicatonLayer/ObjectsInitializer";
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
@@ -24,7 +24,7 @@ export class SceneInitializer {
         this.sceneOptimizer();
 
         this._scene.clearColor = Color4.FromHexString("#33334D");
-        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(0.2, 1.0, 0.2), this._scene);
+        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(-0.2, 1.0, -0.2), this._scene);
         light1.intensity = 0.9;
         
         //Create a sphere for test purposes:
@@ -33,9 +33,10 @@ export class SceneInitializer {
         const universalCamera = CameraInitializer.createUniversalCamera(this._scene, this._canvas);
         const followCamera = CameraInitializer.createFollowCamera(this._scene);
 
-        this._scene.activeCamera = universalCamera; // Or followCamera
+        this._scene.activeCamera = followCamera; // Or followCamera
         
-        const gameObjectsInitializer = new SceneObjectsInitializer(this._scene);
+        
+        const gameObjectsInitializer = new ObjectsInitializer(this._scene, followCamera);
         gameObjectsInitializer.initialize();
         
 
