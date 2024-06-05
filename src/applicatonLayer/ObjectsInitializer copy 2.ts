@@ -1,4 +1,4 @@
-import { Scene, MeshBuilder, Mesh, Vector3, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, KeyboardEventTypes, FollowCamera, PhysicsMotionType, StandardMaterial, Color3, PhysicsMaterialCombineMode, PhysicsBody, Quaternion, PhysicsShapeSphere, PhysicsShapeBox } from "@babylonjs/core";
+import { Scene, MeshBuilder, Mesh, Vector3, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, KeyboardEventTypes, FollowCamera, PhysicsMotionType, StandardMaterial, Color3, PhysicsMaterialCombineMode } from "@babylonjs/core";
 import HavokPhysics from "@babylonjs/havok";
 import { GridMaterial } from '@babylonjs/materials';
 
@@ -32,44 +32,41 @@ export class ObjectsInitializer {
         groundMaterial.diffuseColor = Color3.Random();
         ground.material = groundMaterial;
 
-        this._plank = MeshBuilder.CreateBox("Plank", { size: 4, width: 32, height: 0.5 }, this._scene);
+        this._plank = MeshBuilder.CreateBox("plank", { size: 4, width: 32, height: 0.5 }, this._scene);
         this._plank.position = new Vector3(0, 2.5, 0);
         const defaultGridMaterial = new GridMaterial("default", this._scene);
         defaultGridMaterial.majorUnitFrequency = 5;
         defaultGridMaterial.gridRatio = 0.5;
         this._plank.material = defaultGridMaterial;
 
-        const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.0 }, this._scene);
+        const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.99 }, this._scene);
         plankAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
         plankAggregate.body.disablePreStep = false;
 
-      
-        const box: Mesh = MeshBuilder.CreateBox("Box", { size: 1, width: 1, height: 1 }, this._scene);
-        box.position.y = 4;
-        const mainBoxMaterial = new StandardMaterial("BoxMaterial", this._scene);
+        const box2: Mesh = MeshBuilder.CreateBox("box2", { size: 1, width: 2, height: 1 }, this._scene);
+        const box2Material = new StandardMaterial("box2Material", this._scene);
+        box2Material.diffuseColor = Color3.Random();
+        box2.material = box2Material;
+
+        const boxAggregate2 = new PhysicsAggregate(box2, PhysicsShapeType.BOX, { mass: 1, friction: 0.8, restitution: 0.1 }, this._scene);
+        // Configurando o material de atrito no momento da criação do agregado físico
+        boxAggregate2.shape.material.friction = 0.8;
+        boxAggregate2.shape.material.staticFriction = 0.8;
+        boxAggregate2.shape.material.frictionCombine = PhysicsMaterialCombineMode.MAXIMUM;
+
+        const mainBox: Mesh = MeshBuilder.CreateBox("mainBox", { size: 1, width: 1, height: 1 }, this._scene);
+        mainBox.position.y = 4;
+        const mainBoxMaterial = new StandardMaterial("mainBoxMaterial", this._scene);
         mainBoxMaterial.diffuseColor = Color3.Red();
-        const boxPhysicsBody = new PhysicsBody(box, PhysicsMotionType.DYNAMIC, false, this._scene);
-        boxPhysicsBody.setMassProperties({
-            mass: 10,
-            centerOfMass: new Vector3(0, 0, 0),
-            inertia: new Vector3(1, 1, 1),
-            inertiaOrientation: new Quaternion(0, 0, 0, 1)
-        });
+        mainBox.material = mainBoxMaterial;
 
-        const boxPhysicsShape = new PhysicsShapeBox(
-            new Vector3(0, 0, 0),        // center of the box
-            new Quaternion(0, 0, 0, 1),  // rotation of the box
-            new Vector3(1, 1, 1),        // dimensions of the box
-            this._scene                                // scene of the shape
-        );
-        boxPhysicsBody.shape = boxPhysicsShape;
-        const boxPhysicsMaterial = { friction: 0.45, 
-                           staticFriction: 0.5, 
-                           frictionCombine: PhysicsMaterialCombineMode.MAXIMUM};
-        boxPhysicsShape.material = boxPhysicsMaterial;
-        
+        const boxAggregate3 = new PhysicsAggregate(mainBox, PhysicsShapeType.BOX, { mass: 10 }, this._scene);
+        const mainBoxShapeMaterial = boxAggregate3.shape.material;
+        mainBoxShapeMaterial.friction = 1.99;
+        mainBoxShapeMaterial.staticFriction = 1.99;
+        //mainBoxShapeMaterial.frictionCombine = PhysicsMaterialCombineMode.MAXIMUM;
 
-        this._camera.lockedTarget = box;
+        this._camera.lockedTarget = mainBox;
 
         this._scene.onKeyboardObservable.add((kbInfo) => {
             switch (kbInfo.type) {
