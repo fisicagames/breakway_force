@@ -7,6 +7,7 @@ export class ObjectsInitializer {
     private _plank: Mesh;
     private _rotationSpeed: number = 10;
     private _camera: FollowCamera;
+    private _plank2: Mesh;
 
     constructor(scene: Scene, camera: FollowCamera) {
         this._scene = scene;
@@ -26,7 +27,7 @@ export class ObjectsInitializer {
         this._scene.enablePhysics(new Vector3(0, -9.8, 0), hk);
 
         const ground = MeshBuilder.CreateGround("ground", { width: 50, height: 30 }, this._scene);
-        ground.position.y = -2;
+        ground.position.y = -5;
         const groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this._scene);
         const groundMaterial = new StandardMaterial("groundMaterial", this._scene);
         groundMaterial.diffuseColor = Color3.Random();
@@ -38,14 +39,26 @@ export class ObjectsInitializer {
         defaultGridMaterial.majorUnitFrequency = 5;
         defaultGridMaterial.gridRatio = 0.5;
         this._plank.material = defaultGridMaterial;
-
-        const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.0 }, this._scene);
+        const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.1 }, this._scene);
         plankAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
         plankAggregate.body.disablePreStep = false;
+
+
+        this._plank2 = MeshBuilder.CreateBox("Plank2", { size: 4, width: 32, height: 0.5 }, this._scene);
+        this._plank2.position = new Vector3(32, 0.5, 0);
+        //const defaultGridMaterial = new GridMaterial("default", this._scene);
+        //defaultGridMaterial.majorUnitFrequency = 5;
+        //defaultGridMaterial.gridRatio = 0.5;
+        this._plank2.material = defaultGridMaterial;
+        const plankAggregate2 = new PhysicsAggregate(this._plank2, PhysicsShapeType.BOX, { mass: 1, friction: 0.01 }, this._scene);
+        plankAggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
+        plankAggregate2.body.disablePreStep = false;
+
 
       
         const box: Mesh = MeshBuilder.CreateBox("Box", { size: 1, width: 1, height: 1 }, this._scene);
         box.position.y = 4;
+        box.rotation.y = Math.PI;
         const mainBoxMaterial = new StandardMaterial("BoxMaterial", this._scene);
         mainBoxMaterial.diffuseColor = Color3.Red();
         const boxPhysicsBody = new PhysicsBody(box, PhysicsMotionType.DYNAMIC, false, this._scene);
@@ -63,8 +76,8 @@ export class ObjectsInitializer {
             this._scene                                // scene of the shape
         );
         boxPhysicsBody.shape = boxPhysicsShape;
-        const boxPhysicsMaterial = { friction: 0.45, 
-                           staticFriction: 0.5, 
+        const boxPhysicsMaterial = { friction: 0.2, 
+                           staticFriction: 0.1, 
                            frictionCombine: PhysicsMaterialCombineMode.MAXIMUM};
         boxPhysicsShape.material = boxPhysicsMaterial;
         
@@ -78,13 +91,13 @@ export class ObjectsInitializer {
                         case "a":
                         case "A":
                         case "ArrowLeft":
-                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, -0.05));
+                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, 0.05));
                             break;
                         case "d":
                         case "D":
                         case "ArrowRight":
                             this._plank.rotation.y -= this._rotationSpeed;
-                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, 0.05));
+                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, -0.05));
                             break;
                         case "w":
                         case "W":
@@ -103,8 +116,9 @@ export class ObjectsInitializer {
         // Atualiza o console com o ângulo do plank
         this._scene.onBeforeRenderObservable.add(() => {
             i++;
-            if (i % 30 === 0) {
+            if (i % 60 === 0) {
                 const angleInDegrees = this._plank.rotationQuaternion.toEulerAngles().z * (180 / Math.PI);
+                console.clear();
                 console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
             }
         });
