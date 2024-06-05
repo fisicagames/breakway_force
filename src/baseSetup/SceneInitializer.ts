@@ -23,8 +23,9 @@ export class SceneInitializer {
         this._scene = new Scene(this._engine);
         this.sceneOptimizer();
 
-        this._scene.clearColor = Color4.FromHexString("#33334D");
-        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(-0.2, 1.0, -0.2), this._scene);
+        this._scene.clearColor = Color4.FromHexString("#5FB1CF");
+        
+        const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(0, 1.0, 0.5), this._scene);
         light1.intensity = 0.9;
         
         //Create a sphere for test purposes:
