@@ -5,7 +5,7 @@ import { GridMaterial } from '@babylonjs/materials';
 export class ObjectsInitializer {
     private _scene: Scene;
     private _plank: Mesh;
-    private _rotationSpeed: number = 10;
+    private _rotationSpeed: number = 0.2;
     private _camera: FollowCamera;
     private _plank2: Mesh;
     private _currentPlank: PhysicsBody;
@@ -36,7 +36,7 @@ export class ObjectsInitializer {
         
         ground.material = defaultGridMaterial;
 
-        this._plank = MeshBuilder.CreateBox("Plank", { size: 4, width: 32, height: 0.5 }, this._scene);
+        this._plank = MeshBuilder.CreateBox("Plank", { size: 4, width: 22, height: 0.5 }, this._scene);
         this._plank.position = new Vector3(0, 2.5, 0);
         const plankMaterial = new StandardMaterial("plankMaterial", this._scene);
         plankMaterial.diffuseColor = Color3.Random();
@@ -48,8 +48,8 @@ export class ObjectsInitializer {
         this._currentPlank = plankAggregate.body;
 
 
-        this._plank2 = MeshBuilder.CreateBox("Plank2", { size: 4, width: 32, height: 0.5 }, this._scene);
-        this._plank2.position = new Vector3(32, 0.5, 0);
+        this._plank2 = MeshBuilder.CreateBox("Plank2", { size: 4, width: 24, height: 0.5 }, this._scene);
+        this._plank2.position = new Vector3(23, 0.0, 0);
         const plankMaterial2 = new StandardMaterial("plankMaterial", this._scene);
         plankMaterial2.diffuseColor = Color3.Random();
         this._plank.material = plankMaterial2;
@@ -105,13 +105,13 @@ export class ObjectsInitializer {
                         case "a":
                         case "A":
                         case "ArrowLeft":
-                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 0.1));
+                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, this._rotationSpeed));
                             break;
                         case "d":
                         case "D":
                         case "ArrowRight":
                             //this._plank.rotation.y -= this._rotationSpeed;
-                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, -0.1));
+                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, -this._rotationSpeed));
                             break;
                         case "w":
                         case "W":
@@ -127,28 +127,39 @@ export class ObjectsInitializer {
         });
 
         let i: number = 0;
-        // Atualiza o console com o ângulo do plank
+        let lastBoxLinearVelocity = boxPhysicsBody.getLinearVelocity();
+        let newBoxLinearVelocity = boxPhysicsBody.getLinearVelocity();
+
+        
         this._scene.onBeforeRenderObservable.add(() => {
+            //Loop for console tests and debug:
             i++;
-            if (i % 60 === 0 && i < 6000) {
-                //const angleInDegrees = this._plank.rotationQuaternion.toEulerAngles().z * (180 / Math.PI);
-                //console.clear();
-                //console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
+            if (i % 120 === 0 && i < 6000) {
+                newBoxLinearVelocity = boxPhysicsBody.getLinearVelocity();
+                const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
+                lastBoxLinearVelocity = newBoxLinearVelocity;
+                console.clear();
+                console.log("accelerationBox ", accelerationBox);
+                const angleInDegrees = -this._plank.rotationQuaternion.toEulerAngles().z * (180 / Math.PI);
+                console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
             }
         });
-        this.enablePhysicsViewer(true);
+        this.enablePhysicsViewer(false);
     }
 
     private enablePhysicsViewer(enable: boolean): void {
-        const physicsViewer = new PhysicsViewer();
-        for (const mesh of this._scene.rootNodes) {
-            if (hasPhysicsBody(mesh)) {
-                const debugMesh = physicsViewer.showBody(mesh.physicsBody);
+        if(enable) {
+            const physicsViewer = new PhysicsViewer();
+            for (const mesh of this._scene.rootNodes) {
+                if (hasPhysicsBody(mesh)) {
+                    const debugMesh = physicsViewer.showBody(mesh.physicsBody);
+                }
+            }
+            // Type guard function:
+            function hasPhysicsBody(mesh: any): mesh is { physicsBody: any } {
+                return mesh && 'physicsBody' in mesh;
             }
         }
-        // Type guard function:
-        function hasPhysicsBody(mesh: any): mesh is { physicsBody: any } {
-            return mesh && 'physicsBody' in mesh;
-        }
+        
     }
 }

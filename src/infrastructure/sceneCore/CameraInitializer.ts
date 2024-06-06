@@ -5,7 +5,7 @@ export class CameraInitializer {
         const camera = new FollowCamera("FollowCam", new Vector3(90, 100, -70), scene);
         camera.radius = 50;
         camera.heightOffset = 10;
-        camera.rotationOffset = 15;
+        camera.rotationOffset = 0;
         camera.cameraAcceleration = 0.01;
         camera.maxCameraSpeed = 100;
         camera.lockedTarget = targetMesh;

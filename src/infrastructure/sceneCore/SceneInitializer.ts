@@ -2,7 +2,7 @@ import "@babylonjs/loaders";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, MeshBuilder } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
-import { ObjectsInitializer } from "../applicatonLayer/ObjectsInitializer";
+import { ObjectsInitializer } from "../../application/ObjectsInitializer";
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
