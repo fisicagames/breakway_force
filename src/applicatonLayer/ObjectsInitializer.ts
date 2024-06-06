@@ -1,4 +1,4 @@
-import { Scene, MeshBuilder, Mesh, Vector3, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, KeyboardEventTypes, FollowCamera, PhysicsMotionType, StandardMaterial, Color3, PhysicsMaterialCombineMode, PhysicsBody, Quaternion, PhysicsShapeSphere, PhysicsShapeBox } from "@babylonjs/core";
+import { Scene, MeshBuilder, Mesh, Vector3, HavokPlugin, PhysicsAggregate, PhysicsShapeType, PhysicsViewer, KeyboardEventTypes, FollowCamera, PhysicsMotionType, StandardMaterial, Color3, PhysicsMaterialCombineMode, PhysicsBody, Quaternion, PhysicsShapeSphere, PhysicsShapeBox, TransformNode } from "@babylonjs/core";
 import HavokPhysics from "@babylonjs/havok";
 import { GridMaterial } from '@babylonjs/materials';
 
@@ -8,6 +8,7 @@ export class ObjectsInitializer {
     private _rotationSpeed: number = 10;
     private _camera: FollowCamera;
     private _plank2: Mesh;
+    private _currentPlank: PhysicsBody;
 
     constructor(scene: Scene, camera: FollowCamera) {
         this._scene = scene;
@@ -26,7 +27,7 @@ export class ObjectsInitializer {
         // Enable physics in the scene with gravity
         this._scene.enablePhysics(new Vector3(0, -9.8, 0), hk);
 
-        const ground = MeshBuilder.CreateGround("ground", { width: 50, height: 30 }, this._scene);
+        const ground = MeshBuilder.CreateGround("ground", { width: 400, height: 30 }, this._scene);
         ground.position.y = -5;
         const groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this._scene);
         const groundMaterial = new StandardMaterial("groundMaterial", this._scene);
@@ -42,6 +43,8 @@ export class ObjectsInitializer {
         const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.1 }, this._scene);
         plankAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
         plankAggregate.body.disablePreStep = false;
+
+        this._currentPlank = plankAggregate.body;
 
 
         this._plank2 = MeshBuilder.CreateBox("Plank2", { size: 4, width: 32, height: 0.5 }, this._scene);
@@ -80,24 +83,35 @@ export class ObjectsInitializer {
                            staticFriction: 0.1, 
                            frictionCombine: PhysicsMaterialCombineMode.MAXIMUM};
         boxPhysicsShape.material = boxPhysicsMaterial;
+
+        boxPhysicsBody.setCollisionCallbackEnabled(true);
+
+
+        hk.onCollisionObservable.add((ev) => {
+            //console.log(ev.collider.transformNode.name);
+            this._currentPlank = ev.collider;
+
+        });
         
 
         this._camera.lockedTarget = box;
 
         this._scene.onKeyboardObservable.add((kbInfo) => {
+            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, 0));
+            hk.setAngularVelocity(plankAggregate2.body, new Vector3(0, 0, 0));
             switch (kbInfo.type) {
                 case KeyboardEventTypes.KEYDOWN:
                     switch (kbInfo.event.key) {
                         case "a":
                         case "A":
                         case "ArrowLeft":
-                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, 0.05));
+                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 0.1));
                             break;
                         case "d":
                         case "D":
                         case "ArrowRight":
-                            this._plank.rotation.y -= this._rotationSpeed;
-                            hk.setAngularVelocity(plankAggregate.body, new Vector3(0, 0, -0.05));
+                            //this._plank.rotation.y -= this._rotationSpeed;
+                            hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, -0.1));
                             break;
                         case "w":
                         case "W":
@@ -116,10 +130,10 @@ export class ObjectsInitializer {
         // Atualiza o console com o ângulo do plank
         this._scene.onBeforeRenderObservable.add(() => {
             i++;
-            if (i % 60 === 0) {
-                const angleInDegrees = this._plank.rotationQuaternion.toEulerAngles().z * (180 / Math.PI);
-                console.clear();
-                console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
+            if (i % 60 === 0 && i < 6000) {
+                //const angleInDegrees = this._plank.rotationQuaternion.toEulerAngles().z * (180 / Math.PI);
+                //console.clear();
+                //console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
             }
         });
     }

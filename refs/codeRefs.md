@@ -6,6 +6,10 @@
 
 [https://playground.babylonjs.com/#RQIZD3#1]()
 
+Collision with specific object "sphere" detect:
+
+[https://playground.babylonjs.com/#QEZ3EE#4]()
+
 # [Unable to load Havok plugin (error while loading .wasm file from browser)](https://forum.babylonjs.com/t/unable-to-load-havok-plugin-error-while-loading-wasm-file-from-browser/40289)
 
 https://github.com/michealparks/babylon-template/blob/main/src/physics.ts
@@ -16,7 +20,9 @@ https://github.com/michealparks/babylon-template/blob/main/src/physics.ts
 
 [https://babylonjs.medium.com/why-wasm-is-not-the-future-of-babylon-js-5832b09c9b10]()
 
-# Axis:
+# Axis: ver extensões Babylon.js
+
+[https://doc.babylonjs.com/toolsAndResources/utilities/World_Axes]()
 
 [https://www.babylonjs-playground.com/#2JKA91]()
 
