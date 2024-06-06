@@ -1,0 +1,22 @@
+"filename", "language", "TypeScript", "comment", "blank", "total"
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\application\ObjectsInitializer copy.ts", "TypeScript", 132, 7, 27, 166
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\application\ObjectsInitializer.ts", "TypeScript", 47, 0, 12, 59
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\applicatonLayer\ObjectsInitializer copy 2.ts", "TypeScript", -99, -7, -17, -123
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\applicatonLayer\ObjectsInitializer.ts", "TypeScript", -121, -10, -24, -155
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\CameraInitializer.ts", "TypeScript", -19, 0, -2, -21
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\CanvasInitializer.ts", "TypeScript", -20, 0, -1, -21
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\EngineInitializer.ts", "TypeScript", -20, 0, -5, -25
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\InspectorDebugModel.ts", "TypeScript", -58, 0, -10, -68
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\MaterialOptimizer.ts", "TypeScript", -23, -6, -3, -32
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\baseSetup\SceneInitializer.ts", "TypeScript", -45, -2, -15, -62
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\domain\objcts\Box.ts", "TypeScript", 45, 0, 10, 55
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\domain\objcts\Ground.ts", "TypeScript", 19, 0, 5, 24
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\domain\objcts\Plank.ts", "TypeScript", 26, 0, 6, 32
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\HavokPhysicsSetup.ts", "TypeScript", 12, 0, 4, 16
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\CameraInitializer.ts", "TypeScript", 19, 0, 2, 21
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\CanvasInitializer.ts", "TypeScript", 20, 0, 1, 21
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\EngineInitializer.ts", "TypeScript", 20, 0, 5, 25
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\InspectorDebugModel.ts", "TypeScript", 58, 0, 10, 68
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\MaterialOptimizer.ts", "TypeScript", 23, 6, 3, 32
+"c:\Users\Rafael\Documents\FISTEC3D\Babylonjsv7\breakaway_force\src\infrastructure\sceneCore\SceneInitializer.ts", "TypeScript", 45, 2, 15, 62
+"Total", "-", 61, -10, 23, 74

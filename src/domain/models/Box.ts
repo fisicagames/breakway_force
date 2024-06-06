@@ -15,7 +15,7 @@ export class Box {
         this._box.position.y = 4;
         this._box.rotation.y = Math.PI;
         const mainBoxMaterial = new StandardMaterial("BoxMaterial", this._scene);
-        mainBoxMaterial.diffuseColor = Color3.Red();
+        mainBoxMaterial.diffuseColor = Color3.Green();
         this._box.material = mainBoxMaterial;
 
         this._boxPhysicsBody = new PhysicsBody(this._box, PhysicsMotionType.DYNAMIC, false, this._scene);
