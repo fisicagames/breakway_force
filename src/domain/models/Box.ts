@@ -13,9 +13,10 @@ export class Box {
     private createBox(): void {
         this._box = MeshBuilder.CreateBox("Box", { size: 2, width: 2, height: 2 }, this._scene);
         this._box.position.y = 4;
+        this._box.position.x = 0;
         this._box.rotation.y = Math.PI;
         const mainBoxMaterial = new StandardMaterial("BoxMaterial", this._scene);
-        mainBoxMaterial.diffuseColor = Color3.Green();
+        mainBoxMaterial.diffuseColor = Color3.Blue();
         this._box.material = mainBoxMaterial;
 
         this._boxPhysicsBody = new PhysicsBody(this._box, PhysicsMotionType.DYNAMIC, false, this._scene);

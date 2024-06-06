@@ -1,4 +1,4 @@
-import { CreateBox, Scene } from "@babylonjs/core";
+import { CreateBox, Scene, Vector3 } from "@babylonjs/core";
 import { SkyMaterial } from "@babylonjs/materials";
 
 export class Sky {
@@ -12,10 +12,11 @@ export class Sky {
         skyMaterial.backFaceCulling = false;
         const skyboxMaterial = new SkyMaterial("skyMaterial", this._scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.inclination = -0.5;
-        skyboxMaterial.luminance = 0.1;
-        skyboxMaterial.turbidity = 1.2;
-        skyboxMaterial.cameraOffset.y = 50;
+        skyboxMaterial.inclination = -0.47;
+        skyboxMaterial.luminance = 0.6;
+        skyboxMaterial.turbidity = 0.8;
+        skyboxMaterial.cameraOffset.y = 200;
+        
         const skybox = CreateBox("skyBox", { size: 1200 }, this._scene);
         skybox.material = skyboxMaterial;
     }
