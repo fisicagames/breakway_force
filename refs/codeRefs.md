@@ -27,3 +27,7 @@ https://github.com/michealparks/babylon-template/blob/main/src/physics.ts
 [https://www.babylonjs-playground.com/#2JKA91]()
 
 ![1717537920542](image/codeRefs/1717537920542.png)
+
+# Custom font with jQuery
+
+[https://www.babylonjs-playground.com/#J3X1EJ#2]()

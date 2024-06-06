@@ -30,16 +30,17 @@ export class ObjectsInitializer {
         const ground = MeshBuilder.CreateGround("ground", { width: 400, height: 30 }, this._scene);
         ground.position.y = -5;
         const groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, { mass: 0 }, this._scene);
-        const groundMaterial = new StandardMaterial("groundMaterial", this._scene);
-        groundMaterial.diffuseColor = Color3.Random();
-        ground.material = groundMaterial;
-
-        this._plank = MeshBuilder.CreateBox("Plank", { size: 4, width: 32, height: 0.5 }, this._scene);
-        this._plank.position = new Vector3(0, 2.5, 0);
         const defaultGridMaterial = new GridMaterial("default", this._scene);
         defaultGridMaterial.majorUnitFrequency = 5;
         defaultGridMaterial.gridRatio = 0.5;
-        this._plank.material = defaultGridMaterial;
+        
+        ground.material = defaultGridMaterial;
+
+        this._plank = MeshBuilder.CreateBox("Plank", { size: 4, width: 32, height: 0.5 }, this._scene);
+        this._plank.position = new Vector3(0, 2.5, 0);
+        const plankMaterial = new StandardMaterial("plankMaterial", this._scene);
+        plankMaterial.diffuseColor = Color3.Random();
+        this._plank.material = plankMaterial;
         const plankAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass: 1, friction: 0.1 }, this._scene);
         plankAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
         plankAggregate.body.disablePreStep = false;
@@ -49,21 +50,21 @@ export class ObjectsInitializer {
 
         this._plank2 = MeshBuilder.CreateBox("Plank2", { size: 4, width: 32, height: 0.5 }, this._scene);
         this._plank2.position = new Vector3(32, 0.5, 0);
-        //const defaultGridMaterial = new GridMaterial("default", this._scene);
-        //defaultGridMaterial.majorUnitFrequency = 5;
-        //defaultGridMaterial.gridRatio = 0.5;
-        this._plank2.material = defaultGridMaterial;
+        const plankMaterial2 = new StandardMaterial("plankMaterial", this._scene);
+        plankMaterial2.diffuseColor = Color3.Random();
+        this._plank.material = plankMaterial2;
         const plankAggregate2 = new PhysicsAggregate(this._plank2, PhysicsShapeType.BOX, { mass: 1, friction: 0.01 }, this._scene);
         plankAggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
         plankAggregate2.body.disablePreStep = false;
 
 
       
-        const box: Mesh = MeshBuilder.CreateBox("Box", { size: 1, width: 1, height: 1 }, this._scene);
+        const box: Mesh = MeshBuilder.CreateBox("Box", { size: 2, width: 2, height: 2 }, this._scene);
         box.position.y = 4;
         box.rotation.y = Math.PI;
         const mainBoxMaterial = new StandardMaterial("BoxMaterial", this._scene);
         mainBoxMaterial.diffuseColor = Color3.Red();
+        box.material = mainBoxMaterial;
         const boxPhysicsBody = new PhysicsBody(box, PhysicsMotionType.DYNAMIC, false, this._scene);
         boxPhysicsBody.setMassProperties({
             mass: 10,
@@ -75,7 +76,7 @@ export class ObjectsInitializer {
         const boxPhysicsShape = new PhysicsShapeBox(
             new Vector3(0, 0, 0),        // center of the box
             new Quaternion(0, 0, 0, 1),  // rotation of the box
-            new Vector3(1, 1, 1),        // dimensions of the box
+            new Vector3(2, 2, 2),        // dimensions of the box
             this._scene                                // scene of the shape
         );
         boxPhysicsBody.shape = boxPhysicsShape;
@@ -85,8 +86,7 @@ export class ObjectsInitializer {
         boxPhysicsShape.material = boxPhysicsMaterial;
 
         boxPhysicsBody.setCollisionCallbackEnabled(true);
-
-
+        
         hk.onCollisionObservable.add((ev) => {
             //console.log(ev.collider.transformNode.name);
             this._currentPlank = ev.collider;
@@ -136,9 +136,10 @@ export class ObjectsInitializer {
                 //console.log(`Plank angle: ${angleInDegrees.toFixed(2)} degrees`);
             }
         });
+        this.enablePhysicsViewer(true);
     }
 
-    private enablePhysicsViewer() {
+    private enablePhysicsViewer(enable: boolean): void {
         const physicsViewer = new PhysicsViewer();
         for (const mesh of this._scene.rootNodes) {
             if (hasPhysicsBody(mesh)) {
