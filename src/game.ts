@@ -1,7 +1,7 @@
-import { CanvasInitializer } from "./infrastructure/sceneCore/CanvasInitializer";
-import { EngineInitializer } from "./infrastructure/sceneCore/EngineInitializer";
-import { InspectorDebugModel } from "./infrastructure/sceneCore/InspectorDebugModel";
-import { SceneInitializer } from "./infrastructure/sceneCore/SceneInitializer";
+import { CanvasInitializer } from "./infrastructure/scene/CanvasInitializer";
+import { EngineInitializer } from "./infrastructure/scene/EngineInitializer";
+import { InspectorDebugModel } from "./infrastructure/scene/InspectorDebugModel";
+import { SceneInitializer } from "./infrastructure/scene/SceneInitializer";
 
 export class Game {
     constructor() {

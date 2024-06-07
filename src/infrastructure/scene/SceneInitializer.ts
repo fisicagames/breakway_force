@@ -2,8 +2,11 @@ import "@babylonjs/loaders";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4 } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
-import { ObjectsController  } from "../../application/ObjectsController";
+import { ObjectsController  } from "../../application/controllers/ObjectsController";
 import { GUILoader } from "./GUILoader";
+import { HavokPhysicsEngine } from "../physics/HavokPhysicsEngine";
+import { GUIController } from "../../presentation/GUIController";
+
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
@@ -23,6 +26,7 @@ export class SceneInitializer {
     private async initialize(): Promise<void> {
         this._scene = new Scene(this._engine);
         const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
+        const guiController = new GUIController(advancedTexture);
 
         this.sceneOptimizer();
 
@@ -39,8 +43,9 @@ export class SceneInitializer {
 
         this._scene.activeCamera = followCamera; // Or followCamera
         
-        
-        const gameObjectsInitializer = new ObjectsController(this._scene, followCamera);
+        const physicsEngine = new HavokPhysicsEngine();
+
+        const gameObjectsInitializer = new ObjectsController(this._scene, followCamera, physicsEngine);
         gameObjectsInitializer.initialize();
         
 

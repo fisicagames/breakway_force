@@ -1,9 +1,9 @@
 import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody } from "@babylonjs/core";
-import { HavokPhysicsSetup } from "../infrastructure/HavokPhysicsSetup";
-import { Box } from "../domain/models/Box";
-import { Plank } from "../domain/models/Plank";
-import { Sky } from "../domain/models/Sky";
-import { NetForceVectorLine } from "../domain/models/NetForceVectorLine";
+import { Box } from "../../domain/models/Box";
+import { Plank } from "../../domain/models/Plank";
+import { Sky } from "../../domain/models/Sky";
+import { NetForceVectorLine } from "../../domain/models/NetForceVectorLine";
+import { IHavokPhysicsEngine } from "../../infrastructure/interfaces/IHavokPhysicsEngine";
 
 export class ObjectsController {
     private _scene: Scene;
@@ -11,14 +11,17 @@ export class ObjectsController {
     private _rotationSpeed: number = 0.2;
     private _currentPlank: PhysicsBody;
     private _netForceVectorLine: NetForceVectorLine;
+    private _physicsEngine: IHavokPhysicsEngine;
 
-    constructor(scene: Scene, camera: FollowCamera) {
+    constructor(scene: Scene, camera: FollowCamera, physicsEngine: IHavokPhysicsEngine) {
         this._scene = scene;
         this._camera = camera;
+        this._physicsEngine = physicsEngine;
+
     }
 
     public async initialize(): Promise<void> {
-        const hk = await HavokPhysicsSetup.initialize(this._scene);
+        const hk = await this._physicsEngine.initialize(this._scene);
 
         const sky = new Sky(this._scene);
 
