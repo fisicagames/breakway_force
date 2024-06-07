@@ -1,8 +1,9 @@
 import "@babylonjs/loaders";
-import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, Mesh, MeshBuilder } from "@babylonjs/core";
+import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4 } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
-import { ObjectsInitializer } from "../../application/ObjectsInitializer";
+import { ObjectsController  } from "../../application/ObjectsController";
+import { GUILoader } from "./GUILoader";
 
 export class SceneInitializer {
     private _canvas: HTMLCanvasElement;
@@ -21,6 +22,8 @@ export class SceneInitializer {
 
     private async initialize(): Promise<void> {
         this._scene = new Scene(this._engine);
+        const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
+
         this.sceneOptimizer();
 
         this._scene.clearColor = Color4.FromHexString("#977e79");
@@ -37,7 +40,7 @@ export class SceneInitializer {
         this._scene.activeCamera = followCamera; // Or followCamera
         
         
-        const gameObjectsInitializer = new ObjectsInitializer(this._scene, followCamera);
+        const gameObjectsInitializer = new ObjectsController(this._scene, followCamera);
         gameObjectsInitializer.initialize();
         
 

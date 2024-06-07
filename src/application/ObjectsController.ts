@@ -1,16 +1,16 @@
-import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, Color3, MeshBuilder, Mesh, LinesMesh, Quaternion, MaterialPluginBase, Color4 } from "@babylonjs/core";
+import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody } from "@babylonjs/core";
 import { HavokPhysicsSetup } from "../infrastructure/HavokPhysicsSetup";
 import { Box } from "../domain/models/Box";
-import { Ground } from "../domain/models/Ground";
 import { Plank } from "../domain/models/Plank";
 import { Sky } from "../domain/models/Sky";
+import { NetForceVectorLine } from "../domain/models/NetForceVectorLine";
 
-export class ObjectsInitializer {
+export class ObjectsController {
     private _scene: Scene;
     private _camera: FollowCamera;
     private _rotationSpeed: number = 0.2;
     private _currentPlank: PhysicsBody;
-    private _netForceVectorLine: LinesMesh = null;
+    private _netForceVectorLine: NetForceVectorLine;
 
     constructor(scene: Scene, camera: FollowCamera) {
         this._scene = scene;
@@ -30,19 +30,7 @@ export class ObjectsInitializer {
         }
 
         const box = new Box(this._scene);
-
-        // Local Axes
-        const myPoints = [
-            Vector3.Zero(),
-            new Vector3(1, 0, 0),
-            new Vector3(1 * 0.95, 0.05 * 1, 0),
-            new Vector3(1, 0, 0),
-            new Vector3(1 * 0.95, -0.05 * 1, 0),
-        ]
-
-        this._netForceVectorLine = MeshBuilder.CreateLines("lines", { points: myPoints, updatable: false, instance: this._netForceVectorLine});
-        this._netForceVectorLine.color = new Color3(0.3, 0.3, 0.5);
-        
+        this._netForceVectorLine = new NetForceVectorLine(this._scene, box.mesh);
 
         this._camera.lockedTarget = box.mesh;
 
@@ -76,31 +64,20 @@ export class ObjectsInitializer {
         
         this._scene.onBeforeRenderObservable.add(() => {
             i++;
-            if (i % 5 === 0  ) {
+            if (i % 5 === 0) {
                 const newBoxLinearVelocity = box.physicsBody.getLinearVelocity();
                 const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
                 lastBoxLinearVelocity = newBoxLinearVelocity;
 
-                let magnitude = accelerationBox.length()*20;
-                if (magnitude < 20){
-                    this._netForceVectorLine.scaling = new Vector3(magnitude,magnitude,magnitude)
-                }  else{
-                    magnitude = 0;
-                    this._netForceVectorLine.scaling = new Vector3(magnitude,magnitude,magnitude)
-                }
-
-                const direction = accelerationBox.normalize();
-                const initialDirection = new Vector3(1, 0, 0);  // Eixo X
-                const rotationQuaternion = new Quaternion();
-                Quaternion.FromUnitVectorsToRef(initialDirection, direction, rotationQuaternion);
-
-                // Aplicar a rotação à mesh this._lines
-                this._netForceVectorLine.rotationQuaternion = rotationQuaternion;
+                this._netForceVectorLine.update(accelerationBox);
             }
-            this._netForceVectorLine.position.x = box.mesh.position.x;
-            this._netForceVectorLine.position.y = box.mesh.position.y;
-            this._netForceVectorLine.position.z = box.mesh.position.z - 2;
-            
+            else{
+                this._netForceVectorLine.updateOnlyPosition();
+            }
+            //reset box position after fall
+            if(box.mesh.position.y < -20){
+                //to do: code for restart all objects!
+            }
         });
     }
 }
