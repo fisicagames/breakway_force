@@ -12,10 +12,11 @@ export class Sky {
         skyMaterial.backFaceCulling = false;
         const skyboxMaterial = new SkyMaterial("skyMaterial", this._scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.inclination = -0.47;
+        skyboxMaterial.inclination = -0.495;
+        skyboxMaterial.azimuth = 0.24;
         skyboxMaterial.luminance = 0.6;
         skyboxMaterial.turbidity = 0.8;
-        skyboxMaterial.cameraOffset.y = 200;
+        skyboxMaterial.cameraOffset.y = 240;
         
         const skybox = CreateBox("skyBox", { size: 1200 }, this._scene);
         skybox.material = skyboxMaterial;

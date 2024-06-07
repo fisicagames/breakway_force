@@ -1,3 +1,30 @@
+# GUI Editor
+
+End https://gui.babylonjs.com/#JSGZVD#51
+
+Start: https://gui.babylonjs.com/#JSGZVD#45
+
+# Color palette
+
+[https://colorhunt.co/palette/143f6bf55353feb139f6f54d
+]()
+
+#143F6B
+
+#F55353
+
+#FEB139
+
+#F6F54D
+
+rgb(20, 63, 107)
+
+rgb(245, 83, 83)
+
+rgb(254, 177, 57)
+
+rgb(246, 245, 77)
+
 # Havok Physics Basic
 
 [https://playground.babylonjs.com/#WXSQIF#2]()

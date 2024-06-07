@@ -1,8 +1,7 @@
 import { HavokPlugin, Scene, Vector3 } from "@babylonjs/core";
 import HavokPhysics from "@babylonjs/havok";
-import { IHavokPhysicsEngine } from "../interfaces/IHavokPhysicsEngine";
 
-export class HavokPhysicsEngine implements IHavokPhysicsEngine {
+export class HavokPhysicsEngine   {
     public async initialize(scene: Scene): Promise<HavokPlugin> {
         const havok = await HavokPhysics({
             locateFile: () => `./assets/wasm/HavokPhysics.wasm`
