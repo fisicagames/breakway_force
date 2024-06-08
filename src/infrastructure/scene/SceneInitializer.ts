@@ -2,7 +2,7 @@ import "@babylonjs/loaders";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4 } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
 import { optimizeMaterials } from "./MaterialOptimizer";
-import { ObjectsController  } from "../../application/controllers/ObjectsController";
+import { ObjectsController  } from "../../domain/ObjectsController";
 import { GUILoader } from "./GUILoader";
 import { HavokPhysicsEngine } from "../physics/HavokPhysicsEngine";
 import { GUIController } from "../../presentation/GUIController";

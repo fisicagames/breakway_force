@@ -1,9 +1,9 @@
 import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin } from "@babylonjs/core";
-import { Box } from "../../domain/models/Box";
-import { Plank } from "../../domain/models/Plank";
-import { Sky } from "../../domain/models/Sky";
-import { NetForceVectorLine } from "../../domain/models/NetForceVectorLine";
-import { IGUIController } from "../../presentation/interfaces/IGUIController";
+import { Box } from "./models/Box";
+import { Plank } from "./models/Plank";
+import { Sky } from "./models/Sky";
+import { NetForceVectorLine } from "./models/NetForceVectorLine";
+import { IGUIController } from "../presentation/interfaces/IGUIController";
 
 export class ObjectsController {
     private _scene: Scene;
