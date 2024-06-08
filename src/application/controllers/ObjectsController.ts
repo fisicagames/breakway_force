@@ -1,4 +1,4 @@
-import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody,HavokPlugin } from "@babylonjs/core";
+import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin } from "@babylonjs/core";
 import { Box } from "../../domain/models/Box";
 import { Plank } from "../../domain/models/Plank";
 import { Sky } from "../../domain/models/Sky";
@@ -12,11 +12,13 @@ export class ObjectsController {
     private _currentPlank: PhysicsBody;
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
+    private _guiControllerInterface: IGUIController;
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
+        this._guiControllerInterface = guiController;
 
     }
 
@@ -62,11 +64,19 @@ export class ObjectsController {
             }
         });
 
-        let i: number = 0;    
+        let i: number = 0;
         let lastBoxLinearVelocity = box.physicsBody.getLinearVelocity();
-        
+
         this._scene.onBeforeRenderObservable.add(() => {
             i++;
+            if (this._guiControllerInterface.buttonLeftIsDown) {
+                hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, this._rotationSpeed));
+
+            }
+            if (this._guiControllerInterface.buttonRightIsDown) {
+                hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, -this._rotationSpeed));
+
+            }
             if (i % 5 === 0) {
                 const newBoxLinearVelocity = box.physicsBody.getLinearVelocity();
                 const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
@@ -74,11 +84,11 @@ export class ObjectsController {
 
                 this._netForceVectorLine.update(accelerationBox);
             }
-            else{
+            else {
                 this._netForceVectorLine.updateOnlyPosition();
             }
             //reset box position after fall
-            if(box.mesh.position.y < -20){
+            if (box.mesh.position.y < -20) {
                 //to do: code for restart all objects!
             }
         });

@@ -21,7 +21,7 @@ export class NetForceVectorLine {
         ];
 
         this._netForceVectorLine = MeshBuilder.CreateLines("lines", { points: myPoints, updatable: false });
-        this._netForceVectorLine.color = new Color3(0.3, 0.3, 0.5);
+        this._netForceVectorLine.color = new Color3(0.4, 0.4, 0.6);
     }
 
     public update(accelerationBox: Vector3): void {
