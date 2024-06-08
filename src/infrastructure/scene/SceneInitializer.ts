@@ -47,8 +47,8 @@ export class SceneInitializer {
         const hk = await physicsEngine.initialize(this._scene);
 
 
-        const gameObjectsInitializer = new ObjectsController(this._scene, followCamera, hk);
-        gameObjectsInitializer.initialize();
+        const objectController = new ObjectsController(this._scene, followCamera, hk, guiController);
+        objectController.initialize();
         
 
         const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example

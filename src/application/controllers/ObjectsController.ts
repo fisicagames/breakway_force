@@ -3,6 +3,7 @@ import { Box } from "../../domain/models/Box";
 import { Plank } from "../../domain/models/Plank";
 import { Sky } from "../../domain/models/Sky";
 import { NetForceVectorLine } from "../../domain/models/NetForceVectorLine";
+import { IGUIController } from "../../presentation/interfaces/IGUIController";
 
 export class ObjectsController {
     private _scene: Scene;
@@ -12,7 +13,7 @@ export class ObjectsController {
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
 
-    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin) {
+    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
