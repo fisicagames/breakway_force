@@ -11,6 +11,10 @@ export class GUIController implements IGUIController {
     private _buttonLeft: Button;
     public buttonLeftIsDown: boolean;
     public buttonRightIsDown: boolean;
+    private _buttonMenu: Button;
+    private _rectangleGameContinue: Rectangle;
+
+
     
     constructor(advancedTexture: AdvancedDynamicTexture){
         this._advancedTexture = advancedTexture;
@@ -29,7 +33,9 @@ export class GUIController implements IGUIController {
         this._textblockLevel.isVisible = false;
         this._buttonLeft = this._advancedTexture.getControlByName("ButtonLeft") as Button;
         this._buttonRight = this._advancedTexture.getControlByName("ButtonRight") as Button;
-
+        this._buttonMenu = this._advancedTexture.getControlByName("ButtonMenu") as Button;
+        this._rectangleGameContinue = this._advancedTexture.getControlByName("RectangleGame") as Rectangle;
+        this._rectangleGameContinue.isVisible = false;
     }
     private _guiButtonsSetup(){
         this._buttonMenuStart.onPointerUpObservable.add(() => {
@@ -37,6 +43,16 @@ export class GUIController implements IGUIController {
             this._textblockLevel.isVisible = true;
 
         });
+
+        this._buttonMenu.onPointerUpObservable.add(() => {
+            this._rectangleMenu.isVisible = true;
+            this._textblockLevel.isVisible = false;
+            this._rectangleGameContinue.isVisible = false;
+
+        });
+
+
+
         this._buttonLeft.onPointerDownObservable.add(()=>{
             this.buttonLeftIsDown = true;
         });
