@@ -1,21 +1,27 @@
 import { IGUIController } from "../presentation/GUIController";
 
-export interface IGameController{
-    endGame(): void;
+export enum GameState {
+    RUNNING,
+    ENDED,
 }
 
-
-export class GameController implements IGameController{
+export class GameController {
     private _guiController: IGUIController;
-    constructor(guiController){
+    private _gameState: GameState;
+
+    constructor(guiController: IGUIController) {
         this._guiController = guiController;
-
+        this._gameState = GameState.RUNNING;
     }
 
-    public endGame(): void{
-        this._guiController.endGame();
-
+    public endGame(): void {
+        if (this._gameState === GameState.RUNNING) {
+            this._guiController.endGame();
+            this._gameState = GameState.ENDED;
+        }
     }
 
-
+    public get gameState(): GameState {
+        return this._gameState;
+    }
 }

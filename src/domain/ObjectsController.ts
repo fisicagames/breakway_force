@@ -1,4 +1,4 @@
-import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin } from "@babylonjs/core";
+import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin, TransformNode } from "@babylonjs/core";
 import { Box } from "./models/Box";
 import { Plank } from "./models/Plank";
 import { Sky } from "./models/Sky";
@@ -17,6 +17,8 @@ export class ObjectsController implements IObjectsController {
     private _box: Box;
     private _touchController: ITouchJoystick;
     private _gameController: GameController;
+    private _isGameEnded: boolean;
+    private _planks: Plank[] = [];
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick, gameController: GameController) {
         this._scene = scene;
@@ -25,6 +27,8 @@ export class ObjectsController implements IObjectsController {
         this._touchController = touchController;
         this._gameController = gameController;
         this.initialize();
+        this._isGameEnded = false;
+
     }
 
     private initialize() {
@@ -76,8 +80,9 @@ export class ObjectsController implements IObjectsController {
             
 
             //Verifica se a caixa já caiu fora da possibilidade continuar o jogo:
-            if(this._box.mesh.position.y < this._currentPlankPB.transformNode.position.y - 50){
+            if(!this._isGameEnded && this._box.mesh.position.y < this._currentPlankPB.transformNode.position.y - 50){
                 this._gameController.endGame();
+                this._isGameEnded = true;
             }
             //Verifica se a caixa chegou no limite da cena
             if(this._box.mesh.position.y < -600){
@@ -95,7 +100,18 @@ export class ObjectsController implements IObjectsController {
             if (i === 0) {
                 this._currentPlankPB = plank.physicsBody;
             }
+            this._planks.push(plank);
         }
+    }
+    private resetPlanksOrientation() {        
+        this._planks.forEach(plank => {
+            plank.physicsBody.disablePreStep = false;
+            plank.mesh.rotation = Vector3.Zero();
+            this._scene.onAfterRenderObservable.addOnce(() => {
+                plank.physicsBody.disablePreStep = true;
+            })            
+        });
+        
     }
     private plankCollisionHandler(hk: HavokPlugin) {
         hk.onCollisionObservable.add((ev) => {
@@ -115,6 +131,7 @@ export class ObjectsController implements IObjectsController {
                         case "A":
                         case "ArrowLeft":
                             this.rotatePlank(1);
+                            this.resetPlanksOrientation();
                             break;
                         case "d":
                         case "D":

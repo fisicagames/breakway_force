@@ -4,9 +4,7 @@ export class Plank {
     private _scene: Scene;
     private _plank: Mesh;
     private _plankPhysicsAggregate: PhysicsAggregate;
-
     private _index: number;
-
 
     constructor(index: number, scene: Scene, position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number) {
         this._scene = scene;
