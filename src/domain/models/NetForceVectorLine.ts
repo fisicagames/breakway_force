@@ -21,14 +21,14 @@ export class NetForceVectorLine {
         ];
 
         this._netForceVectorLine = MeshBuilder.CreateLines("lines", { points: myPoints, updatable: false });
-        this._netForceVectorLine.color = new Color3(0.4, 0.4, 0.6);
+        this._netForceVectorLine.color = new Color3(0.6, 0.6, 0.6);
     }
 
     public update(accelerationBox: Vector3): void {
         const magnitude = accelerationBox.length() * 20;
         const direction = accelerationBox.normalize();
 
-        if (magnitude < 20) {
+        if (magnitude < 20  && accelerationBox.y < 1) {
             this._netForceVectorLine.scaling = new Vector3(magnitude, magnitude, magnitude);
         } else {
             this._netForceVectorLine.scaling = new Vector3(0, 0, 0);
@@ -48,6 +48,10 @@ export class NetForceVectorLine {
         this._netForceVectorLine.position.x = this._box.position.x;
         this._netForceVectorLine.position.y = this._box.position.y;
         this._netForceVectorLine.position.z = this._box.position.z - 2;
+
+    }
+    public setColor(intensity: number){
+        this._netForceVectorLine.color = new Color3(intensity, intensity,intensity);
 
     }
 }

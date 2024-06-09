@@ -1,16 +1,18 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
-import { IGUIController } from "./interfaces/IGUIController";
+import { ITouchJoystick } from "./interfaces/IGUIController";
 
 
-export class GUIController implements IGUIController {
+export class GUIController implements ITouchJoystick {
+ 
+    public buttonLeftIsDown: boolean;
+    public buttonRightIsDown: boolean;
+ 
     private _advancedTexture: AdvancedDynamicTexture;
     private _rectangleMenu: Rectangle;
     private _buttonMenuStart: Button;
     private _textblockLevel: TextBlock;
     private _buttonRight: Button;
     private _buttonLeft: Button;
-    public buttonLeftIsDown: boolean;
-    public buttonRightIsDown: boolean;
     private _buttonMenu: Button;
     private _rectangleGameContinue: Rectangle;
 
@@ -20,6 +22,7 @@ export class GUIController implements IGUIController {
         this._advancedTexture = advancedTexture;
         this._guiSetup();
         this._guiButtonsSetup();
+
 
     }
 
@@ -50,8 +53,6 @@ export class GUIController implements IGUIController {
             this._rectangleGameContinue.isVisible = false;
 
         });
-
-
 
         this._buttonLeft.onPointerDownObservable.add(()=>{
             this.buttonLeftIsDown = true;

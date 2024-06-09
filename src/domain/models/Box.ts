@@ -24,7 +24,7 @@ export class Box {
             mass: 10,
             centerOfMass: new Vector3(0, 0, 0),
             inertia: new Vector3(1, 1, 1),
-            inertiaOrientation: new Quaternion(0, 0, 0, 1)
+            inertiaOrientation: new Quaternion(0, 0, 0, 1)            
         });
 
         const boxPhysicsShape = new PhysicsShapeBox(
@@ -37,9 +37,10 @@ export class Box {
         const boxPhysicsMaterial = {
             friction: 0.2,
             staticFriction: 0.1,
-            frictionCombine: PhysicsMaterialCombineMode.MAXIMUM
+            frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
+            restitution: 0.5
         };
-
+        boxPhysicsShape.material.restitution
         boxPhysicsShape.material = boxPhysicsMaterial;
         this._boxPhysicsBody.shape = boxPhysicsShape;
         this._boxPhysicsBody.setCollisionCallbackEnabled(true);

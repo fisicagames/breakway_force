@@ -48,7 +48,7 @@ export class SceneInitializer {
 
 
         const objectController = new ObjectsController(this._scene, followCamera, hk, guiController);
-        
+
 
         const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
         optimizeMaterials(this._scene, materialNames); //optional

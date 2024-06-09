@@ -1,4 +1,4 @@
-export interface IGUIController{ 
+export interface ITouchJoystick{ 
     buttonLeftIsDown: boolean;
     buttonRightIsDown: boolean;
 }

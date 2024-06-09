@@ -3,22 +3,24 @@ import { Box } from "./models/Box";
 import { Plank } from "./models/Plank";
 import { Sky } from "./models/Sky";
 import { NetForceVectorLine } from "./models/NetForceVectorLine";
-import { IGUIController } from "../presentation/interfaces/IGUIController";
+import { IObjectsController } from "../application/interfaces/IObjectsController";
+import { ITouchJoystick } from "../presentation/interfaces/IGUIController";
 
-export class ObjectsController {
+export class ObjectsController implements IObjectsController {
     private _scene: Scene;
     private _camera: FollowCamera;
-    private _rotationSpeed: number = 0.2;
+    private _rotationSpeed: number = 2;
     private _currentPlank: PhysicsBody;
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
-    private _guiControllerInterface: IGUIController;
+    private _box: Box;
+    private _touchController: ITouchJoystick;
 
-    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController) {
+    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
-        this._guiControllerInterface = guiController;
+        this._touchController = touchController;
         this.initialize();
     }
 
@@ -26,31 +28,40 @@ export class ObjectsController {
         const sky = new Sky(this._scene);
         this.createPlanks();
 
-        const box = new Box(this._scene);
-        this._netForceVectorLine = new NetForceVectorLine(this._scene, box.mesh);
+        this._box = new Box(this._scene);
+        this._netForceVectorLine = new NetForceVectorLine(this._scene, this._box.mesh);
 
-        this._camera.lockedTarget = box.mesh;
+        this._camera.lockedTarget = this._box.mesh;
 
         const hk = this._physicsEngine;
-        this.keyboardInput(hk);
 
         this.plankCollisionHandler(hk);
 
+        this.updateObjects();
+        this.keyboardInput();
+
+    }
+
+    private updateObjects() {
         let iFramesCount: number = 0;
-        let lastBoxLinearVelocity = box.physicsBody.getLinearVelocity();
+        let lastBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
 
         this._scene.onBeforeRenderObservable.add(() => {
+            if (this._touchController.buttonLeftIsDown) {
+                this.rotatePlank(1);
+            }
+            else if (this._touchController.buttonRightIsDown) {
+                this.rotatePlank(-1);
+            }
+            else {
+                this.rotatePlank(0);
+            }
+
             iFramesCount++;
-            if (this._guiControllerInterface.buttonLeftIsDown) {
-                hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, this._rotationSpeed));
 
-            }
-            if (this._guiControllerInterface.buttonRightIsDown) {
-                hk.setAngularVelocity(this._currentPlank, new Vector3(0, 0, -this._rotationSpeed));
+            if (iFramesCount % 10 === 0) {
 
-            }
-            if (iFramesCount % 5 === 0) {
-                const newBoxLinearVelocity = box.physicsBody.getLinearVelocity();
+                const newBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
                 const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
                 lastBoxLinearVelocity = newBoxLinearVelocity;
 
@@ -58,10 +69,6 @@ export class ObjectsController {
             }
             else {
                 this._netForceVectorLine.updateOnlyPosition();
-            }
-            //reset box position after fall
-            if (box.mesh.position.y < -20) {
-                //to do: code for restart all objects!
             }
         });
     }
@@ -77,12 +84,13 @@ export class ObjectsController {
     private plankCollisionHandler(hk: HavokPlugin) {
         hk.onCollisionObservable.add((ev) => {
             if (this._currentPlank !== ev.collider) {
+                this._currentPlank.setAngularVelocity(new Vector3(0, 0, 0,));
                 this._currentPlank = ev.collider;
             }
         });
     }
 
-    private keyboardInput(hk: HavokPlugin) {
+    private keyboardInput() {
         this._scene.onKeyboardObservable.add((kbInfo) => {
             switch (kbInfo.type) {
                 case KeyboardEventTypes.KEYDOWN:
@@ -103,7 +111,13 @@ export class ObjectsController {
         });
     }
 
-    public rotatePlank(factor:number) {
-        this._physicsEngine.setAngularVelocity(this._currentPlank, new Vector3(0, 0, factor*this._rotationSpeed));
+    public rotatePlank(direction: number): void {
+        if (this._currentPlank.getLinearVelocity().z !== 0) {
+            this._physicsEngine.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 5 * direction * this._rotationSpeed));
+        }
+        else {
+            this._physicsEngine.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 0.1 * direction * this._rotationSpeed));
+        }
+
     }
 }
