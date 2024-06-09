@@ -32,29 +32,22 @@ export class SceneInitializer {
 
 
         this.sceneOptimizer();
-
         this._scene.clearColor = Color4.FromHexString("#977e79");
-        
         const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(0, 1.0, -0.5), this._scene);
         light1.intensity = 1.1;
         
-        //Create a sphere for test purposes:
-        //const sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, this._scene);
-
         const universalCamera = CameraInitializer.createUniversalCamera(this._scene, this._canvas);
         const followCamera = CameraInitializer.createFollowCamera(this._scene);
-
         this._scene.activeCamera = followCamera; // Or followCamera
         
         const physicsEngine = new HavokPhysicsEngine();
         const hk = await physicsEngine.initialize(this._scene);
-
-
         const objectController = new ObjectsController(this._scene, followCamera, hk, guiController, gameController);
 
+        gameController.setObjectsController(objectController);
+        guiController.setObjectsController(objectController);
 
-        const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
-        optimizeMaterials(this._scene, materialNames); //optional
+
         await this._scene.whenReadyAsync(); //optional
         this._engine.hideLoadingUI(); //optional
         this.sceneLoop();

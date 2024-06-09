@@ -7,6 +7,7 @@ import { IObjectsController } from "../application/interfaces/IObjectsController
 import { ITouchJoystick } from "../presentation/interfaces/ITouchJoystick";
 import { GameController } from "../application/GameController";
 
+
 export class ObjectsController implements IObjectsController {
     private _scene: Scene;
     private _camera: FollowCamera;
@@ -19,6 +20,7 @@ export class ObjectsController implements IObjectsController {
     private _gameController: GameController;
     private _isGameEnded: boolean;
     private _planks: Plank[] = [];
+    private _planksNode: TransformNode;
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick, gameController: GameController) {
         this._scene = scene;
@@ -26,6 +28,7 @@ export class ObjectsController implements IObjectsController {
         this._physicsEngine = physicsPlugin;
         this._touchController = touchController;
         this._gameController = gameController;
+        this._planksNode = new TransformNode("Planks",this._scene);
         this.initialize();
         this._isGameEnded = false;
 
@@ -100,13 +103,28 @@ export class ObjectsController implements IObjectsController {
             if (i === 0) {
                 this._currentPlankPB = plank.physicsBody;
             }
+            plank.mesh.parent = this._planksNode;
             this._planks.push(plank);
         }
     }
-    private resetPlanksOrientation() {        
+    public resetBoxState() {
+        this._camera.position = new Vector3(390, -40, -20);
+        this._box.physicsBody.disablePreStep = false;
+        this._box.mesh.rotation.y = Math.PI;
+        this._box.mesh.position = new Vector3(0, 3.8, 0);
+        this._scene.onAfterRenderObservable.addOnce(() => {
+            this._box.physicsBody.disablePreStep = true;
+            this._box.physicsBody.setAngularVelocity(Vector3.Zero());
+            this._box.physicsBody.setLinearVelocity(Vector3.Zero());
+    
+        })            
+    }
+    public resetPlanksOrientation() {        
         this._planks.forEach(plank => {
             plank.physicsBody.disablePreStep = false;
             plank.mesh.rotation = Vector3.Zero();
+            this._box.physicsBody.setAngularVelocity(Vector3.Zero());
+            this._box.physicsBody.setLinearVelocity(Vector3.Zero());
             this._scene.onAfterRenderObservable.addOnce(() => {
                 plank.physicsBody.disablePreStep = true;
             })            
@@ -131,8 +149,10 @@ export class ObjectsController implements IObjectsController {
                         case "A":
                         case "ArrowLeft":
                             this.rotatePlank(1);
-                            this.resetPlanksOrientation();
                             break;
+                        case "b":
+                            this.resetPlanksOrientation();
+                            this.resetBoxState();
                         case "d":
                         case "D":
                         case "ArrowRight":

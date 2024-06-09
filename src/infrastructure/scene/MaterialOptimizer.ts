@@ -1,5 +1,8 @@
 import { Scene, PBRMaterial } from "@babylonjs/core";
 
+//How to use:
+//const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; 
+//optimizeMaterials(this._scene, materialNames);
 export function optimizeMaterials(scene: Scene, materialNames: string[]): void {
     scene.meshes.forEach(mesh => {
         if (mesh.material && materialNames.includes(mesh.material.name)) {

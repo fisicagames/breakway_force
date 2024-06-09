@@ -1,12 +1,15 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
 import { ITouchJoystick } from "./interfaces/ITouchJoystick";
+import { IObjectsController } from "../application/interfaces/IObjectsController";
+
 
 export interface IGUIController{
     endGame();
 }
-export class GUIController implements ITouchJoystick,IGUIController {
+export class GUIController implements IGUIController,ITouchJoystick {
  
 
+    private _objectsController: IObjectsController;
 
     public buttonLeftIsDown: boolean;
     public buttonRightIsDown: boolean;
@@ -25,7 +28,10 @@ export class GUIController implements ITouchJoystick,IGUIController {
     public endGame(){
         this._rectangleGame.isVisible = true;
     }
-    
+    public setObjectsController(objectsController: IObjectsController): void {
+        this._objectsController = objectsController;
+    }
+
     constructor(advancedTexture: AdvancedDynamicTexture){
         this._advancedTexture = advancedTexture;
         this._guiSetup();
@@ -57,6 +63,8 @@ export class GUIController implements ITouchJoystick,IGUIController {
     }
     private _guiButtonsSetup(){
         this._buttonMenuStart.onPointerUpObservable.add(() => {
+            this._objectsController.resetBoxState();
+            this._objectsController.resetPlanksOrientation();
             this._rectangleMenu.isVisible = false;
             this._textblockLevel.isVisible = true;
             this._rectangleTouch.isVisible = true;
