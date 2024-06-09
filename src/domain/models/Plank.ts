@@ -5,13 +5,18 @@ export class Plank {
     private _plank: Mesh;
     private _plankPhysicsAggregate: PhysicsAggregate;
 
-    constructor(scene: Scene, position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number) {
+    private _index: number;
+
+
+    constructor(index: number, scene: Scene, position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number) {
         this._scene = scene;
         this.createPlank(position, dimensions, mass, friction);
+        this._index = index;
     }
 
     private createPlank(position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number): void {
-        this._plank = MeshBuilder.CreateBox("Plank", dimensions, this._scene);
+        const name = `Plank${this._index}`
+        this._plank = MeshBuilder.CreateBox(name, dimensions, this._scene);
         this._plank.position = position;
         const plankMaterial = new StandardMaterial("plankMaterial", this._scene);
         plankMaterial.diffuseColor = Color3.Random();

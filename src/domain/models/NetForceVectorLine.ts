@@ -25,10 +25,9 @@ export class NetForceVectorLine {
     }
 
     public update(accelerationBox: Vector3): void {
-        const magnitude = accelerationBox.length() * 20;
+        const magnitude = accelerationBox.length() * 10;
         const direction = accelerationBox.normalize();
-
-        if (magnitude < 20  && accelerationBox.y < 1) {
+        if (magnitude < 20) {
             this._netForceVectorLine.scaling = new Vector3(magnitude, magnitude, magnitude);
         } else {
             this._netForceVectorLine.scaling = new Vector3(0, 0, 0);

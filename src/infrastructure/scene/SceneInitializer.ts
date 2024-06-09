@@ -6,6 +6,7 @@ import { ObjectsController  } from "../../domain/ObjectsController";
 import { GUILoader } from "./GUILoader";
 import { HavokPhysicsEngine } from "../physics/HavokPhysicsEngine";
 import { GUIController } from "../../presentation/GUIController";
+import { GameController } from "../../application/GameController";
 
 
 export class SceneInitializer {
@@ -27,6 +28,8 @@ export class SceneInitializer {
         this._scene = new Scene(this._engine);
         const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
         const guiController = new GUIController(advancedTexture);
+        const gameController = new GameController(guiController);
+
 
         this.sceneOptimizer();
 
@@ -47,7 +50,7 @@ export class SceneInitializer {
         const hk = await physicsEngine.initialize(this._scene);
 
 
-        const objectController = new ObjectsController(this._scene, followCamera, hk, guiController);
+        const objectController = new ObjectsController(this._scene, followCamera, hk, guiController, gameController);
 
 
         const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example

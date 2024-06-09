@@ -1,9 +1,14 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
-import { ITouchJoystick } from "./interfaces/IGUIController";
+import { ITouchJoystick } from "./interfaces/ITouchJoystick";
+import { IGameController } from "../application/GameController";
 
-
-export class GUIController implements ITouchJoystick {
+export interface IGUIController{
+    endGame();
+}
+export class GUIController implements ITouchJoystick,IGUIController {
  
+
+
     public buttonLeftIsDown: boolean;
     public buttonRightIsDown: boolean;
  
@@ -15,13 +20,18 @@ export class GUIController implements ITouchJoystick {
     private _buttonLeft: Button;
     private _buttonMenu: Button;
     private _rectangleGameContinue: Rectangle;
+    private _rectangleTouch: Rectangle;
+    private _rectangleTop: Rectangle;
 
-
+    public endGame(){
+        this._rectangleGameContinue.isVisible = true;
+    }
     
     constructor(advancedTexture: AdvancedDynamicTexture){
         this._advancedTexture = advancedTexture;
         this._guiSetup();
         this._guiButtonsSetup();
+        
 
 
     }
@@ -37,13 +47,23 @@ export class GUIController implements ITouchJoystick {
         this._buttonLeft = this._advancedTexture.getControlByName("ButtonLeft") as Button;
         this._buttonRight = this._advancedTexture.getControlByName("ButtonRight") as Button;
         this._buttonMenu = this._advancedTexture.getControlByName("ButtonMenu") as Button;
+        this._buttonMenu.isVisible = false;
         this._rectangleGameContinue = this._advancedTexture.getControlByName("RectangleGame") as Rectangle;
         this._rectangleGameContinue.isVisible = false;
+        this._rectangleTouch = this._advancedTexture.getControlByName("RectangleTouch") as Rectangle;
+        this._rectangleTouch.isVisible = false;
+        this._rectangleTop = this._advancedTexture.getControlByName("RectangleTop") as Rectangle;
+        this._rectangleTop.isVisible = false;
+        
     }
     private _guiButtonsSetup(){
         this._buttonMenuStart.onPointerUpObservable.add(() => {
             this._rectangleMenu.isVisible = false;
             this._textblockLevel.isVisible = true;
+            this._rectangleTouch.isVisible = true;
+            this._rectangleTop.isVisible = true;
+            this._buttonMenu.isVisible = true;
+
 
         });
 

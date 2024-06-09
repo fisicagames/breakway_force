@@ -4,23 +4,26 @@ import { Plank } from "./models/Plank";
 import { Sky } from "./models/Sky";
 import { NetForceVectorLine } from "./models/NetForceVectorLine";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
-import { ITouchJoystick } from "../presentation/interfaces/IGUIController";
+import { ITouchJoystick } from "../presentation/interfaces/ITouchJoystick";
+import { GameController } from "../application/GameController";
 
 export class ObjectsController implements IObjectsController {
     private _scene: Scene;
     private _camera: FollowCamera;
     private _rotationSpeed: number = 2;
-    private _currentPlank: PhysicsBody;
+    private _currentPlankPB: PhysicsBody;
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
     private _box: Box;
     private _touchController: ITouchJoystick;
+    private _gameController: GameController;
 
-    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick) {
+    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick, gameController: GameController) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
         this._touchController = touchController;
+        this._gameController = gameController;
         this.initialize();
     }
 
@@ -70,22 +73,35 @@ export class ObjectsController implements IObjectsController {
             else {
                 this._netForceVectorLine.updateOnlyPosition();
             }
+            
+
+            //Verifica se a caixa já caiu fora da possibilidade continuar o jogo:
+            if(this._box.mesh.position.y < this._currentPlankPB.transformNode.position.y - 50){
+                this._gameController.endGame();
+            }
+            //Verifica se a caixa chegou no limite da cena
+            if(this._box.mesh.position.y < -600){
+                this._scene.physicsEnabled = false;
+                this._box.mesh.isVisible = false;
+                //this._physicsEngine.setTimeStep(0.03);
+            }
+
         });
     }
 
     private createPlanks() {
         for (let i = 0; i < 10; i++) {
-            const plank = new Plank(this._scene, new Vector3(24 * i, -2.5 * i + 2.5, 0), { size: 4, width: 24, height: 0.5 }, 1, 0.01);
+            const plank = new Plank(i, this._scene, new Vector3(24 * i, -2.5 * i + 2.5, 0), { size: 4, width: 24, height: 0.5 }, 1, 0.01);
             if (i === 0) {
-                this._currentPlank = plank.physicsBody;
+                this._currentPlankPB = plank.physicsBody;
             }
         }
     }
     private plankCollisionHandler(hk: HavokPlugin) {
         hk.onCollisionObservable.add((ev) => {
-            if (this._currentPlank !== ev.collider) {
-                this._currentPlank.setAngularVelocity(new Vector3(0, 0, 0,));
-                this._currentPlank = ev.collider;
+            if (this._currentPlankPB !== ev.collider) {
+                this._currentPlankPB.setAngularVelocity(new Vector3(0, 0, 0,));
+                this._currentPlankPB = ev.collider;
             }
         });
     }
@@ -112,11 +128,11 @@ export class ObjectsController implements IObjectsController {
     }
 
     public rotatePlank(direction: number): void {
-        if (this._currentPlank.getLinearVelocity().z !== 0) {
-            this._physicsEngine.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 5 * direction * this._rotationSpeed));
+        if (this._currentPlankPB.getLinearVelocity().z !== 0) {
+            this._physicsEngine.setAngularVelocity(this._currentPlankPB, new Vector3(0, 0, 5 * direction * this._rotationSpeed));
         }
         else {
-            this._physicsEngine.setAngularVelocity(this._currentPlank, new Vector3(0, 0, 0.1 * direction * this._rotationSpeed));
+            this._physicsEngine.setAngularVelocity(this._currentPlankPB, new Vector3(0, 0, 0.1 * direction * this._rotationSpeed));
         }
 
     }
