@@ -48,7 +48,6 @@ export class SceneInitializer {
 
 
         const objectController = new ObjectsController(this._scene, followCamera, hk, guiController);
-        objectController.initialize();
         
 
         const materialNames = ["MaterialX.00X", "MaterialY.00Y"]; // Only an example
