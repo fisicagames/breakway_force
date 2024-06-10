@@ -60,6 +60,7 @@ export class ObjectsController implements IObjectsController {
         let lastBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
 
         this._scene.onBeforeRenderObservable.add(() => {
+            this._camera.position.z = -50;
             if (this._guiController.buttonLeftIsDown) {
                 this.rotatePlank(1);
                 this._netForceVectorLine.setVisible(false);
@@ -103,7 +104,7 @@ export class ObjectsController implements IObjectsController {
     }
 
     private createPlanks() {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             const plank = new Plank(i, this._scene, new Vector3(24 * i, -2.5 * i + 2.5, 0), { size: 4, width: 24, height: 0.5 }, 1, 0.01);
             if (i === 0) {
                 this._currentPlankPB = plank.physicsBody;
