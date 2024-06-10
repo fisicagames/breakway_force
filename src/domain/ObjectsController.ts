@@ -22,6 +22,7 @@ export class ObjectsController implements IObjectsController {
     private _planksNode: TransformNode;
 
     public maxDistanceX: number;
+    public angleCurrentPlank: number;
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
         this._scene = scene;
@@ -194,6 +195,6 @@ export class ObjectsController implements IObjectsController {
         else {
             this._physicsEngine.setAngularVelocity(this._currentPlankPB, new Vector3(0, 0, 0.1 * direction * this._rotationSpeed));
         }
-
+        this.angleCurrentPlank = -this._currentPlankPB.transformNode.rotation.z*180/Math.PI;
     }
 }

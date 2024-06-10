@@ -35,9 +35,8 @@ export class GUIController implements IGUIController {
     private _textblockTotalScore: TextBlock;
     private _highScore: number = 0;
     private _textblockMenuBest: TextBlock;
-
-
-
+    private _textblockAngle: TextBlock;
+    
 
     public endGame() {
         this._textblockScoreGame.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`
@@ -59,11 +58,12 @@ export class GUIController implements IGUIController {
         this._guiSetup();
         this._guiButtonsSetup();
         this._soundTrack = new SoundLoader(this._advancedTexture.getScene(),
-            "soundBoatEngine", "./assets/sounds/upbeat-summer_long-202389.mp3", false);
+            "soundBoatEngine", "./assets/sounds/upbeat-summer_long-202389.mp3", true);
         this._allSounds.push(this._soundTrack);
     }
     public updateGUI() {
         this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;
+        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(0)}°`;
     }
 
     private _guiSetup() {
@@ -91,6 +91,8 @@ export class GUIController implements IGUIController {
         this._textblockScoreGame = this._advancedTexture.getControlByName("TextblockScoreGame") as TextBlock;
         this._textblockTotalScore = this._advancedTexture.getControlByName("TextblockTotalScore") as TextBlock;
         this._textblockMenuBest = this._advancedTexture.getControlByName("TextblockMenuBest") as TextBlock;
+        this._textblockAngle = this._advancedTexture.getControlByName("TextblockAngle") as TextBlock;
+        
 
 
     }
@@ -104,8 +106,8 @@ export class GUIController implements IGUIController {
         });
 
 
-        this._textblockMenuMusic.text = "🔈";
-        let stateMusic = false;
+        this._textblockMenuMusic.text = "🔊";
+        let stateMusic = true;
         this._textblockMenuMusic.onPointerUpObservable.add(() => {
             this._soundTrack.togglePlayback();
             stateMusic = !stateMusic;
