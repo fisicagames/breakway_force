@@ -64,9 +64,9 @@ export class GUIController implements IGUIController {
         this._allSounds.push(this._soundTrack);
     }
     public updateGUI() {
-        this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;
+        this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;        
+        this._textBlockEquation.text = `μₑ = ${this._objectsController.boxStaticFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxStaticFriction)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = ${this._objectsController.boxFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxFriction)*180/Math.PI).toFixed(1)}°)`
         this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°`;
-        this._textBlockEquation.text = `μₑ = 0,05 (${(Math.atan(0.05)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = 0.10 (${(Math.atan(0.10)*180/Math.PI).toFixed(1)}°)`
     }
 
     private _guiSetup() {

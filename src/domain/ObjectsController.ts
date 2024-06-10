@@ -28,6 +28,7 @@ export class ObjectsController implements IObjectsController {
     public angleCurrentPlank: number;
     public boxStaticFriction: number;
     public boxFriction: number;
+    
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
         this._scene = scene;
@@ -37,6 +38,8 @@ export class ObjectsController implements IObjectsController {
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks", this._scene);
         this.maxDistanceX = 0;
+        this.boxFriction = 0.05;
+        this.boxStaticFriction = 0.1;
         this.initialize();
     }
 
@@ -133,8 +136,8 @@ export class ObjectsController implements IObjectsController {
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
             const boxPhysicsMaterial = {
-                friction: 0.05,
-                staticFriction: 0.1,
+                friction: this.boxFriction,
+                staticFriction: this.boxStaticFriction,
                 frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
                 restitution: 0.5
             };
