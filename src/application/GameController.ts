@@ -32,4 +32,7 @@ export class GameController {
     public get gameState(): GameState {
         return this._gameState;
     }
+    public set gameState(set: GameState) {
+         this._gameState = set;
+    }
 }
