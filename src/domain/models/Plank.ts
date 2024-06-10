@@ -4,16 +4,16 @@ export class Plank {
     private _scene: Scene;
     private _plank: Mesh;
     private _plankPhysicsAggregate: PhysicsAggregate;
-    private _index: number;
+    public index: number;
 
     constructor(index: number, scene: Scene, position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number) {
         this._scene = scene;
-        this._index = index;
+        this.index = index;
         this.createPlank(position, dimensions, mass, friction);
     }
 
     private createPlank(position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number): void {
-        const name = `Plank${this._index}`;
+        const name = `Plank${this.index}`;
         this._plank = MeshBuilder.CreateBox(name, dimensions, this._scene);
         this._plank.position = position;
         const plankMaterial = new StandardMaterial("plankMaterial", this._scene);

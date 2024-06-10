@@ -23,7 +23,6 @@ export class ObjectsController implements IObjectsController {
     private _planksNode: TransformNode;
     private _physicsBodyToPlankMap: Map<PhysicsBody, Plank> = new Map();
 
-
     public maxDistanceX: number;
     public angleCurrentPlank: number;
     public boxStaticFriction: number;
@@ -38,8 +37,8 @@ export class ObjectsController implements IObjectsController {
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks", this._scene);
         this.maxDistanceX = 0;
-        this.boxFriction = 0.05;
-        this.boxStaticFriction = 0.1;
+        this.boxFriction = 0.85;
+        this.boxStaticFriction = 0.9;
         this.initialize();
     }
 
@@ -82,7 +81,7 @@ export class ObjectsController implements IObjectsController {
             }
 
             iFramesCount++;
-
+            
             if (iFramesCount % 10 === 0) {
                 const newBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
                 const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
@@ -124,6 +123,9 @@ export class ObjectsController implements IObjectsController {
 
     }
     public resetBoxState() {
+        this.boxStaticFriction = 0.7;
+        this.boxFriction = 0.65;
+        this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
         this.maxDistanceX = 0;
         this._gameController.gameState = GameState.RUNNING;
 
@@ -132,22 +134,25 @@ export class ObjectsController implements IObjectsController {
         this._camera.position = new Vector3(-500, -40, -20);
         this._box.physicsBody.disablePreStep = false;
         this._box.mesh.rotation = new Vector3(0, Math.PI, 0);
-        this._box.mesh.position = new Vector3(0, 3.8, 0);
+        this._box.mesh.position = new Vector3(-10, 3.8, 0);
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
-            const boxPhysicsMaterial = {
-                friction: this.boxFriction,
-                staticFriction: this.boxStaticFriction,
-                frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
-                restitution: 0.5
-            };
-            this._box.physicsBody.shape.material = boxPhysicsMaterial;
+            this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
             this._box.physicsBody.setAngularVelocity(Vector3.Zero());
             this._box.physicsBody.setLinearVelocity(Vector3.Zero());
             this._box.mesh.isVisible = true;
-
         })
     }
+    private setPhysicsMaterialToBox(staticFriction: number, friction: number) {
+        const boxPhysicsMaterial = {
+            staticFriction: staticFriction,
+            friction: friction,
+            frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
+            restitution: 0.5
+        };
+        this._box.physicsBody.shape.material = boxPhysicsMaterial;
+    }
+
     public resetPlanksOrientation() {
         this._planks.forEach(plank => {
             plank.physicsBody.disablePreStep = false;
@@ -168,6 +173,9 @@ export class ObjectsController implements IObjectsController {
                 if (this._currentPlank) {
                     this._currentPlankPB = this._currentPlank.physicsBody;
                 }
+                this.boxStaticFriction > 0.1 ? this.boxStaticFriction = 0.9 - 0.01*this._currentPlank.index: 0.1;
+                this.boxFriction > 0.05 ? this.boxFriction = 0.85 - 0.02*this._currentPlank.index: 0.05;
+                this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
             }
             this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
             this._guiController.updateGUI();
