@@ -36,6 +36,8 @@ export class GUIController implements IGUIController {
     private _highScore: number = 0;
     private _textblockMenuBest: TextBlock;
     private _textblockAngle: TextBlock;
+    private _textBlockEquation: TextBlock;
+    
     
 
     public endGame() {
@@ -63,7 +65,8 @@ export class GUIController implements IGUIController {
     }
     public updateGUI() {
         this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;
-        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(0)}°`;
+        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°`;
+        this._textBlockEquation.text = `μₑ = 0,05 (${(Math.atan(0.05)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = 0.10 (${(Math.atan(0.10)*180/Math.PI).toFixed(1)}°)`
     }
 
     private _guiSetup() {
@@ -92,6 +95,8 @@ export class GUIController implements IGUIController {
         this._textblockTotalScore = this._advancedTexture.getControlByName("TextblockTotalScore") as TextBlock;
         this._textblockMenuBest = this._advancedTexture.getControlByName("TextblockMenuBest") as TextBlock;
         this._textblockAngle = this._advancedTexture.getControlByName("TextblockAngle") as TextBlock;
+        this._textBlockEquation = this._advancedTexture.getControlByName("TextBlockEquation") as TextBlock;
+        
         
 
 

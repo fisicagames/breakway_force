@@ -12,6 +12,7 @@ export class ObjectsController implements IObjectsController {
     private _scene: Scene;
     private _camera: FollowCamera;
     private _rotationSpeed: number = 2;
+    private _currentPlank: Plank;
     private _currentPlankPB: PhysicsBody;
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
@@ -20,9 +21,13 @@ export class ObjectsController implements IObjectsController {
     private _gameController: GameController;
     private _planks: Plank[] = [];
     private _planksNode: TransformNode;
+    private _physicsBodyToPlankMap: Map<PhysicsBody, Plank> = new Map();
+
 
     public maxDistanceX: number;
     public angleCurrentPlank: number;
+    public boxStaticFriction: number;
+    public boxFriction: number;
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
         this._scene = scene;
@@ -110,6 +115,7 @@ export class ObjectsController implements IObjectsController {
             }
             plank.mesh.parent = this._planksNode;
             this._planks.push(plank);
+            this._physicsBodyToPlankMap.set(plank.physicsBody, plank); 
         }
 
 
@@ -155,7 +161,10 @@ export class ObjectsController implements IObjectsController {
         hk.onCollisionObservable.add((ev) => {
             if (this._currentPlankPB !== ev.collider) {
                 this._currentPlankPB.setAngularVelocity(new Vector3(0, 0, 0,));
-                this._currentPlankPB = ev.collider;
+                this._currentPlank = this._physicsBodyToPlankMap.get(ev.collider);
+                if (this._currentPlank) {
+                    this._currentPlankPB = this._currentPlank.physicsBody;
+                }
             }
             this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
             this._guiController.updateGUI();
