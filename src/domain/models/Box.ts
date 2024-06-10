@@ -38,7 +38,7 @@ export class Box {
             friction: 0.05,
             staticFriction: 0.1,
             frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
-            restitution: 0.5
+            restitution: 0.01
         };
         boxPhysicsShape.material = boxPhysicsMaterial;
         this._boxPhysicsBody.shape = boxPhysicsShape;

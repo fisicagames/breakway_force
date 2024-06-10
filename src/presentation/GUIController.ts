@@ -60,13 +60,13 @@ export class GUIController implements IGUIController {
         this._guiSetup();
         this._guiButtonsSetup();
         this._soundTrack = new SoundLoader(this._advancedTexture.getScene(),
-            "soundBoatEngine", "./assets/sounds/upbeat-summer_long-202389.mp3", true);
+            "soundBoatEngine", "./assets/sounds/big-band-show-146321.mp3", true);
         this._allSounds.push(this._soundTrack);
     }
     public updateGUI() {
         this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;        
         this._textBlockEquation.text = `μₑ = ${this._objectsController.boxStaticFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxStaticFriction)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = ${this._objectsController.boxFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxFriction)*180/Math.PI).toFixed(1)}°)`
-        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°`;
+        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°    Coeficiente de restituição: ${this._objectsController.boxRestitution.toFixed(2)} `;
     }
 
     private _guiSetup() {

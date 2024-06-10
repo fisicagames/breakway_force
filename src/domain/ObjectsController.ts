@@ -27,6 +27,7 @@ export class ObjectsController implements IObjectsController {
     public angleCurrentPlank: number;
     public boxStaticFriction: number;
     public boxFriction: number;
+    public boxRestitution: number;
     
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
@@ -39,6 +40,7 @@ export class ObjectsController implements IObjectsController {
         this.maxDistanceX = 0;
         this.boxFriction = 0.85;
         this.boxStaticFriction = 0.9;
+        this.boxRestitution = 0.01;
         this.initialize();
     }
 
@@ -111,7 +113,7 @@ export class ObjectsController implements IObjectsController {
 
     private createPlanks() {
         for (let i = 0; i < 100; i++) {
-            const plank = new Plank(i, this._scene, new Vector3(24 * i, -2.5 * i + 2.5, 0), { size: 4, width: 24, height: 0.5 }, 1, 0.01);
+            const plank = new Plank(i, this._scene, new Vector3(41 * i, -7.5 * i + 2.5, 0), { size: 4, width: 42, height: 0.5 }, 1, 0.01);
             if (i === 0) {
                 this._currentPlankPB = plank.physicsBody;
             }
@@ -125,7 +127,8 @@ export class ObjectsController implements IObjectsController {
     public resetBoxState() {
         this.boxStaticFriction = 0.7;
         this.boxFriction = 0.65;
-        this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
+        this.boxRestitution = 0.01;
+        this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction, this.boxRestitution);
         this.maxDistanceX = 0;
         this._gameController.gameState = GameState.RUNNING;
 
@@ -134,7 +137,7 @@ export class ObjectsController implements IObjectsController {
         this._camera.position = new Vector3(-500, -40, -20);
         this._box.physicsBody.disablePreStep = false;
         this._box.mesh.rotation = new Vector3(0, Math.PI, 0);
-        this._box.mesh.position = new Vector3(-10, 3.8, 0);
+        this._box.mesh.position = new Vector3(-20, 3.8, 0);
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
             this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
@@ -143,12 +146,12 @@ export class ObjectsController implements IObjectsController {
             this._box.mesh.isVisible = true;
         })
     }
-    private setPhysicsMaterialToBox(staticFriction: number, friction: number) {
+    private setPhysicsMaterialToBox(staticFriction: number, friction: number, restitution: number = 0.01) {
         const boxPhysicsMaterial = {
             staticFriction: staticFriction,
             friction: friction,
             frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
-            restitution: 0.5
+            restitution: restitution
         };
         this._box.physicsBody.shape.material = boxPhysicsMaterial;
     }
@@ -173,9 +176,10 @@ export class ObjectsController implements IObjectsController {
                 if (this._currentPlank) {
                     this._currentPlankPB = this._currentPlank.physicsBody;
                 }
-                this.boxStaticFriction > 0.1 ? this.boxStaticFriction = 0.9 - 0.01*this._currentPlank.index: 0.1;
-                this.boxFriction > 0.05 ? this.boxFriction = 0.85 - 0.02*this._currentPlank.index: 0.05;
-                this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
+                this.boxStaticFriction > 0.1 ? this.boxStaticFriction = this.boxStaticFriction - 0.01*this._currentPlank.index: 0.1;
+                this.boxFriction > 0.05 ? this.boxFriction = this.boxFriction - 0.02*this._currentPlank.index: 0.05;
+                this.boxRestitution < 1.01 ? this.boxRestitution = this.boxRestitution + 0.01 *this._currentPlank.index: 1.00;
+                this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction, this.boxRestitution);
             }
             this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
             this._guiController.updateGUI();

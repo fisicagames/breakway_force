@@ -3,6 +3,7 @@ export interface IObjectsController {
     maxDistanceX: number;
     boxStaticFriction: number;
     boxFriction: number;
+    boxRestitution: number;
     resetBoxState();
     resetPlanksOrientation();
 }
