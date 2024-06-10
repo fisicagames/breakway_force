@@ -1,23 +1,21 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
 import { SoundLoader } from "../infrastructure/scene/SoundLoader";
-import { ISoundInterface } from "../infrastructure/scene/ISoundInterface";
 
-
-export interface IGUIController{
+export interface IGUIController {
     endGame();
     updateGUI();
     buttonLeftIsDown: boolean;
     buttonRightIsDown: boolean;
 }
 export class GUIController implements IGUIController {
- 
+
 
     private _objectsController: IObjectsController;
 
     public buttonLeftIsDown: boolean;
     public buttonRightIsDown: boolean;
- 
+
     private _advancedTexture: AdvancedDynamicTexture;
     private _rectangleMenu: Rectangle;
     private _buttonMenuStart: Button;
@@ -29,27 +27,39 @@ export class GUIController implements IGUIController {
     private _rectangleTouch: Rectangle;
     private _rectangleTop: Rectangle;
     private _soundTrack: SoundLoader;
-    private _allSounds: ISoundInterface[] = [];
+    private _allSounds: SoundLoader[] = [];
     private _textblockMenuMusic: TextBlock;
     private _buttonMenuContinuar: Button;
     private _rectangleGameContinue: Rectangle;
+    private _textblockScoreGame: TextBlock;
+    private _textblockTotalScore: TextBlock;
+    private _highScore: number = 0;
+    private _textblockMenuBest: TextBlock;
 
 
 
-    public endGame(){
+
+    public endGame() {
+        this._textblockScoreGame.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`
+        if( this._highScore < this._objectsController.maxDistanceX){
+            this._highScore  = this._objectsController.maxDistanceX;
+        }
+        this._textblockTotalScore.text = `Recorde: ${this._highScore.toFixed(0)}`;
+        this._textblockMenuBest.text = `${this._highScore.toFixed(0)}`;
         this._rectangleGame.isVisible = true;
-        
+
+
     }
     public setObjectsController(objectsController: IObjectsController): void {
         this._objectsController = objectsController;
     }
 
-    constructor(advancedTexture: AdvancedDynamicTexture){
+    constructor(advancedTexture: AdvancedDynamicTexture) {
         this._advancedTexture = advancedTexture;
         this._guiSetup();
         this._guiButtonsSetup();
         this._soundTrack = new SoundLoader(this._advancedTexture.getScene(),
-         "soundBoatEngine","./assets/sounds/upbeat-summer_long-202389.mp3", false);
+            "soundBoatEngine", "./assets/sounds/upbeat-summer_long-202389.mp3", false);
         this._allSounds.push(this._soundTrack);
     }
     public updateGUI() {
@@ -78,10 +88,13 @@ export class GUIController implements IGUIController {
         this._rectangleTop.isVisible = false;
         this._textblockMenuMusic = this._advancedTexture.getControlByName("TextblockMenuMusic") as TextBlock;
         this._buttonMenuContinuar = this._advancedTexture.getControlByName("ButtonMenuContinuar") as Button;
+        this._textblockScoreGame = this._advancedTexture.getControlByName("TextblockScoreGame") as TextBlock;
+        this._textblockTotalScore = this._advancedTexture.getControlByName("TextblockTotalScore") as TextBlock;
+        this._textblockMenuBest = this._advancedTexture.getControlByName("TextblockMenuBest") as TextBlock;
 
-        
+
     }
-    private _guiButtonsSetup(){
+    private _guiButtonsSetup() {
 
         this._buttonMenuContinuar.onPointerUpObservable.add(() => {
             this._rectangleGameContinue.isVisible = false;
@@ -97,7 +110,7 @@ export class GUIController implements IGUIController {
             this._soundTrack.togglePlayback();
             stateMusic = !stateMusic;
 
-            this._textblockMenuMusic.text = stateMusic  ? "🔊" : "🔈";
+            this._textblockMenuMusic.text = stateMusic ? "🔊" : "🔈";
         });
 
         this._buttonMenuStart.onPointerUpObservable.add(() => {
@@ -117,20 +130,20 @@ export class GUIController implements IGUIController {
             this._textblockLevel.isVisible = false;
             this._rectangleGame.isVisible = false;
             this._rectangleTop.isVisible = false;
-            this._rectangleTouch.isVisible = false;            
+            this._rectangleTouch.isVisible = false;
         });
 
-        this._buttonLeft.onPointerDownObservable.add(()=>{
+        this._buttonLeft.onPointerDownObservable.add(() => {
             this.buttonLeftIsDown = true;
         });
-        this._buttonLeft.onPointerUpObservable.add(()=>{
+        this._buttonLeft.onPointerUpObservable.add(() => {
             this.buttonLeftIsDown = false;
 
         });
-        this._buttonRight.onPointerDownObservable.add(()=>{
+        this._buttonRight.onPointerDownObservable.add(() => {
             this.buttonRightIsDown = true;
         });
-        this._buttonRight.onPointerUpObservable.add(()=>{
+        this._buttonRight.onPointerUpObservable.add(() => {
             this.buttonRightIsDown = false;
 
         });
