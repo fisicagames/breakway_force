@@ -4,6 +4,7 @@ import { IObjectsController } from "../application/interfaces/IObjectsController
 
 export interface IGUIController{
     endGame();
+    updateGUI();
     buttonLeftIsDown: boolean;
     buttonRightIsDown: boolean;
 }
@@ -37,9 +38,9 @@ export class GUIController implements IGUIController {
         this._advancedTexture = advancedTexture;
         this._guiSetup();
         this._guiButtonsSetup();
-        
-
-
+    }
+    public updateGUI() {
+        this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;
     }
 
     private _guiSetup() {

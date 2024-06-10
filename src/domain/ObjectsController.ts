@@ -16,19 +16,22 @@ export class ObjectsController implements IObjectsController {
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
     private _box: Box;
-    private _touchController: IGUIController;
+    private _guiController: IGUIController;
     private _gameController: GameController;
     private _isGameEnded: boolean;
     private _planks: Plank[] = [];
     private _planksNode: TransformNode;
+    
+    public maxDistanceX: number;
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
-        this._touchController = guiController;
+        this._guiController = guiController;
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks",this._scene);
+        this.maxDistanceX = 0;
         this.initialize();
         this._isGameEnded = false;
     }
@@ -57,11 +60,11 @@ export class ObjectsController implements IObjectsController {
         let lastBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
 
         this._scene.onBeforeRenderObservable.add(() => {
-            if (this._touchController.buttonLeftIsDown) {
+            if (this._guiController.buttonLeftIsDown) {
                 this.rotatePlank(1);
                 this._netForceVectorLine.setVisible(false);
             }
-            else if (this._touchController.buttonRightIsDown) {
+            else if (this._guiController.buttonRightIsDown) {
                 this.rotatePlank(-1);
                 this._netForceVectorLine.setVisible(false);
             }
@@ -73,7 +76,6 @@ export class ObjectsController implements IObjectsController {
             iFramesCount++;
 
             if (iFramesCount % 10 === 0) {
-
                 const newBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
                 const accelerationBox = newBoxLinearVelocity.subtract(lastBoxLinearVelocity);
                 lastBoxLinearVelocity = newBoxLinearVelocity;
@@ -111,9 +113,12 @@ export class ObjectsController implements IObjectsController {
         }
     }
     public resetBoxState() {
+        this.maxDistanceX = 0;
+        this._scene.physicsEnabled = true;
+        this._box.mesh.isVisible = false;
         this._camera.position = new Vector3(390, -40, -20);
         this._box.physicsBody.disablePreStep = false;
-        this._box.mesh.rotation.y = Math.PI;
+        this._box.mesh.rotation = new Vector3(0,Math.PI,0);
         this._box.mesh.position = new Vector3(0, 3.8, 0);
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
@@ -126,6 +131,8 @@ export class ObjectsController implements IObjectsController {
             this._box.physicsBody.shape.material = boxPhysicsMaterial;
             this._box.physicsBody.setAngularVelocity(Vector3.Zero());
             this._box.physicsBody.setLinearVelocity(Vector3.Zero());
+            this._box.mesh.isVisible = true;
+
         })            
     }
     public resetPlanksOrientation() {        
@@ -146,6 +153,8 @@ export class ObjectsController implements IObjectsController {
                 this._currentPlankPB.setAngularVelocity(new Vector3(0, 0, 0,));
                 this._currentPlankPB = ev.collider;
             }
+            this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
+            this._guiController.updateGUI();
         });
     }
 
