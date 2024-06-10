@@ -2,7 +2,7 @@ import { Engine, GPUParticleSystem } from "@babylonjs/core";
 
 export class EngineInitializer {
     public static createEngine(canvas: HTMLCanvasElement): Engine {
-        let engine = new Engine(canvas, true, { disableWebGL2Support: false });
+        let engine = new Engine(canvas, true, { disableWebGL2Support: true });
         console.log("GPU is supported: ", GPUParticleSystem.IsSupported);
 
         if (GPUParticleSystem.IsSupported) {

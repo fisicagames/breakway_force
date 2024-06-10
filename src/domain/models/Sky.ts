@@ -20,6 +20,7 @@ export class Sky {
         
         const skybox = CreateBox("skyBox", { size: 1200 }, this._scene);
         skybox.material = skyboxMaterial;
+        skybox.infiniteDistance = true;
     }
 }
 

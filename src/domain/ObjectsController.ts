@@ -112,12 +112,14 @@ export class ObjectsController implements IObjectsController {
             plank.mesh.parent = this._planksNode;
             this._planks.push(plank);
         }
+
+        
     }
     public resetBoxState() {
         this.maxDistanceX = 0;
         this._scene.physicsEnabled = true;
         this._box.mesh.isVisible = false;
-        this._camera.position = new Vector3(390, -40, -20);
+        //this._camera.position = new Vector3(390, -40, -20);
         this._box.physicsBody.disablePreStep = false;
         this._box.mesh.rotation = new Vector3(0,Math.PI,0);
         this._box.mesh.position = new Vector3(0, 3.8, 0);
