@@ -14,7 +14,6 @@ export class Plank {
 
     private createPlank(position: Vector3, dimensions: { size: number; width: number; height: number }, mass: number, friction: number): void {
         const name = `Plank${this._index}`;
-        console.log(`Plank${this._index}`);
         this._plank = MeshBuilder.CreateBox(name, dimensions, this._scene);
         this._plank.position = position;
         const plankMaterial = new StandardMaterial("plankMaterial", this._scene);
@@ -22,7 +21,7 @@ export class Plank {
         this._plank.material = plankMaterial;
         this._plankPhysicsAggregate = new PhysicsAggregate(this._plank, PhysicsShapeType.BOX, { mass, friction }, this._scene);
         this._plankPhysicsAggregate.body.setMotionType(PhysicsMotionType.ANIMATED);
-        this._plankPhysicsAggregate.body.disablePreStep = false;
+        this._plankPhysicsAggregate.body.disablePreStep = true;
     }
 
     public get mesh(): Mesh {

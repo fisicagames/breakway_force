@@ -35,12 +35,11 @@ export class Box {
         );
 
         const boxPhysicsMaterial = {
-            friction: 0.2,
+            friction: 0.05,
             staticFriction: 0.1,
             frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
             restitution: 0.5
         };
-        boxPhysicsShape.material.restitution
         boxPhysicsShape.material = boxPhysicsMaterial;
         this._boxPhysicsBody.shape = boxPhysicsShape;
         this._boxPhysicsBody.setCollisionCallbackEnabled(true);

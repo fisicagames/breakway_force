@@ -10,6 +10,9 @@ export class NetForceVectorLine {
         this._box = box;
         this.createNetForceVectorLine();
     }
+    public setVisible(visible: boolean) {
+        this._netForceVectorLine.isVisible = visible;
+    }
 
     private createNetForceVectorLine(): void {
         const myPoints = [

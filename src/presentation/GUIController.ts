@@ -1,12 +1,13 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
-import { ITouchJoystick } from "./interfaces/ITouchJoystick";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
 
 
 export interface IGUIController{
     endGame();
+    buttonLeftIsDown: boolean;
+    buttonRightIsDown: boolean;
 }
-export class GUIController implements IGUIController,ITouchJoystick {
+export class GUIController implements IGUIController {
  
 
     private _objectsController: IObjectsController;

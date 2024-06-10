@@ -1,11 +1,11 @@
-import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin, TransformNode } from "@babylonjs/core";
+import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin, TransformNode, PhysicsMaterialCombineMode } from "@babylonjs/core";
 import { Box } from "./models/Box";
 import { Plank } from "./models/Plank";
 import { Sky } from "./models/Sky";
 import { NetForceVectorLine } from "./models/NetForceVectorLine";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
-import { ITouchJoystick } from "../presentation/interfaces/ITouchJoystick";
 import { GameController } from "../application/GameController";
+import { IGUIController } from "../presentation/GUIController";
 
 
 export class ObjectsController implements IObjectsController {
@@ -16,22 +16,21 @@ export class ObjectsController implements IObjectsController {
     private _netForceVectorLine: NetForceVectorLine;
     private _physicsEngine: HavokPlugin;
     private _box: Box;
-    private _touchController: ITouchJoystick;
+    private _touchController: IGUIController;
     private _gameController: GameController;
     private _isGameEnded: boolean;
     private _planks: Plank[] = [];
     private _planksNode: TransformNode;
 
-    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, touchController: ITouchJoystick, gameController: GameController) {
+    constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
         this._scene = scene;
         this._camera = camera;
         this._physicsEngine = physicsPlugin;
-        this._touchController = touchController;
+        this._touchController = guiController;
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks",this._scene);
         this.initialize();
         this._isGameEnded = false;
-
     }
 
     private initialize() {
@@ -53,18 +52,22 @@ export class ObjectsController implements IObjectsController {
     }
 
     private updateObjects() {
+        this._netForceVectorLine.setVisible(true);
         let iFramesCount: number = 0;
         let lastBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
 
         this._scene.onBeforeRenderObservable.add(() => {
             if (this._touchController.buttonLeftIsDown) {
                 this.rotatePlank(1);
+                this._netForceVectorLine.setVisible(false);
             }
             else if (this._touchController.buttonRightIsDown) {
                 this.rotatePlank(-1);
+                this._netForceVectorLine.setVisible(false);
             }
             else {
                 this.rotatePlank(0);
+                this._netForceVectorLine.setVisible(true);
             }
 
             iFramesCount++;
@@ -114,9 +117,15 @@ export class ObjectsController implements IObjectsController {
         this._box.mesh.position = new Vector3(0, 3.8, 0);
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
+            const boxPhysicsMaterial = {
+                friction: 0.05,
+                staticFriction: 0.1,
+                frictionCombine: PhysicsMaterialCombineMode.MAXIMUM,
+                restitution: 0.5
+            };
+            this._box.physicsBody.shape.material = boxPhysicsMaterial;
             this._box.physicsBody.setAngularVelocity(Vector3.Zero());
             this._box.physicsBody.setLinearVelocity(Vector3.Zero());
-    
         })            
     }
     public resetPlanksOrientation() {        
@@ -149,6 +158,7 @@ export class ObjectsController implements IObjectsController {
                         case "A":
                         case "ArrowLeft":
                             this.rotatePlank(1);
+                            this._netForceVectorLine.setVisible(false);
                             break;
                         case "b":
                             this.resetPlanksOrientation();
@@ -157,6 +167,7 @@ export class ObjectsController implements IObjectsController {
                         case "D":
                         case "ArrowRight":
                             this.rotatePlank(-1);
+                            this._netForceVectorLine.setVisible(false);
                             break;
                     }
                     break;
