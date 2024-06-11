@@ -38,8 +38,8 @@ export class ObjectsController implements IObjectsController {
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks", this._scene);
         this.maxDistanceX = 0;
-        this.boxFriction = 0.85;
-        this.boxStaticFriction = 0.9;
+        this.boxFriction = 0.65;
+        this.boxStaticFriction = 0.7;
         this.boxRestitution = 0.01;
         this.initialize();
     }
@@ -176,9 +176,9 @@ export class ObjectsController implements IObjectsController {
                 if (this._currentPlank) {
                     this._currentPlankPB = this._currentPlank.physicsBody;
                 }
-                this.boxStaticFriction > 0.1 ? this.boxStaticFriction = this.boxStaticFriction - 0.01*this._currentPlank.index: 0.1;
-                this.boxFriction > 0.05 ? this.boxFriction = this.boxFriction - 0.02*this._currentPlank.index: 0.05;
-                this.boxRestitution < 1.01 ? this.boxRestitution = this.boxRestitution + 0.01 *this._currentPlank.index: 1.00;
+                this.boxStaticFriction > 0.1 ? this.boxStaticFriction = 0.7 - 0.01*this._currentPlank.index: 0.1;
+                this.boxFriction > 0.05 ? this.boxFriction = 0.65 - 0.02*this._currentPlank.index: 0.05;
+                this.boxRestitution < 1.01 ? this.boxRestitution = 0.01 + 0.01 *this._currentPlank.index: 1.00;
                 this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction, this.boxRestitution);
             }
             this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
