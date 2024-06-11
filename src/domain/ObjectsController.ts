@@ -105,7 +105,6 @@ export class ObjectsController implements IObjectsController {
             if (this._box.mesh.position.y < -600) {
                 this._scene.physicsEnabled = false;
                 this._box.mesh.isVisible = false;
-                //this._physicsEngine.setTimeStep(0.03);
             }
 
         });
