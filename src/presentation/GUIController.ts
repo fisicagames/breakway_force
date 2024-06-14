@@ -1,6 +1,7 @@
 import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs/gui";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
 import { SoundLoader } from "../infrastructure/scene/SoundLoader";
+import { GuiLanguage } from "./GUILanguage";
 
 export interface IGUIController {
     endGame();
@@ -37,15 +38,19 @@ export class GUIController implements IGUIController {
     private _textblockMenuBest: TextBlock;
     private _textblockAngle: TextBlock;
     private _textBlockEquation: TextBlock;
+    private _buttonLang: Button;
+    private _guiLanguage: GuiLanguage;
     
     
 
     public endGame() {
-        this._textblockScoreGame.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`
+        this._textblockScoreGame.text = this._guiLanguage.getCurrentLanguage() === 0 ?
+        `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`:`Points: ${this._objectsController.maxDistanceX.toFixed(0)}`
         if( this._highScore < this._objectsController.maxDistanceX){
             this._highScore  = this._objectsController.maxDistanceX;
         }
-        this._textblockTotalScore.text = `Recorde: ${this._highScore.toFixed(0)}`;
+        this._textblockTotalScore.text = this._guiLanguage.getCurrentLanguage() === 0 ? 
+        `Recorde: ${this._highScore.toFixed(0)}`:`Record: ${this._highScore.toFixed(0)}`;
         this._textblockMenuBest.text = `${this._highScore.toFixed(0)}`;
         this._rectangleGame.isVisible = true;
 
@@ -62,11 +67,18 @@ export class GUIController implements IGUIController {
         this._soundTrack = new SoundLoader(this._advancedTexture.getScene(),
             "soundBoatEngine", "./assets/sounds/big-band-show-146321.mp3", true);
         this._allSounds.push(this._soundTrack);
+        this._guiLanguage = new GuiLanguage();
+        this._guiLanguage.updateText(this._advancedTexture);
+
+
     }
     public updateGUI() {
-        this._textblockLevel.text = `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`;        
+        this._textblockLevel.text =  this._guiLanguage.getCurrentLanguage() === 0 ?
+        `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`:`Points: ${this._objectsController.maxDistanceX.toFixed(0)}`;
         this._textBlockEquation.text = `μₑ = ${this._objectsController.boxStaticFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxStaticFriction)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = ${this._objectsController.boxFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxFriction)*180/Math.PI).toFixed(1)}°)`
-        this._textblockAngle.text =  `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°    Coeficiente de restituição: ${this._objectsController.boxRestitution.toFixed(2)} `;
+        this._textblockAngle.text =  this._guiLanguage.getCurrentLanguage() === 0 ?
+        `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°    Coeficiente de restituição: ${this._objectsController.boxRestitution.toFixed(2)} `:
+        `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°    Coefficient of restitution: ${this._objectsController.boxRestitution.toFixed(2)} `;
     }
 
     private _guiSetup() {
@@ -96,12 +108,17 @@ export class GUIController implements IGUIController {
         this._textblockMenuBest = this._advancedTexture.getControlByName("TextblockMenuBest") as TextBlock;
         this._textblockAngle = this._advancedTexture.getControlByName("TextblockAngle") as TextBlock;
         this._textBlockEquation = this._advancedTexture.getControlByName("TextBlockEquation") as TextBlock;
-        
+        this._buttonLang = this._advancedTexture.getControlByName("ButtonLang") as Button;
+
         
 
 
     }
     private _guiButtonsSetup() {
+
+        this._buttonLang.onPointerUpObservable.add(() => {
+            this._guiLanguage.changeLanguage(this._advancedTexture);
+        });
 
         this._buttonMenuContinuar.onPointerUpObservable.add(() => {
             this._rectangleGameContinue.isVisible = false;
