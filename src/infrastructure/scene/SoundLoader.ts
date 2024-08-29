@@ -50,7 +50,9 @@ export class SoundLoader implements ISoundInterface {
     public togglePlayback(): void {
         if (this._sound.isPlaying) {
             this.pause();
+            SoundLoader.isMusicEnabled = false;
         } else {
+            SoundLoader.isMusicEnabled = true;
             this.play();
         }
     }
