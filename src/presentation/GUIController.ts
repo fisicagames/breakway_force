@@ -2,6 +2,7 @@ import { AdvancedDynamicTexture, Rectangle, Button, TextBlock } from "@babylonjs
 import { IObjectsController } from "../application/interfaces/IObjectsController";
 import { SoundLoader } from "../infrastructure/scene/SoundLoader";
 import { GuiLanguage } from "./GUILanguage";
+import { LanguageManager } from "./LanguageDetector";
 
 export interface IGUIController {
     endGame();
@@ -69,8 +70,9 @@ export class GUIController implements IGUIController {
         this._allSounds.push(this._soundTrack);
         this._guiLanguage = new GuiLanguage();
         this._guiLanguage.updateText(this._advancedTexture);
-
-
+        //Feature added on 2024-12-13: Automatically set the language based on the browser's settings.
+        LanguageManager.detectAndSetLanguage(() => this._guiLanguage.changeLanguage(this._advancedTexture));
+        //
     }
     public updateGUI() {
         this._textblockLevel.text =  this._guiLanguage.getCurrentLanguage() === 0 ?
