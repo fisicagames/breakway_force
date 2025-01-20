@@ -1,4 +1,4 @@
-import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin, TransformNode, PhysicsMaterialCombineMode } from "@babylonjs/core";
+import { Scene, Vector3, FollowCamera, KeyboardEventTypes, PhysicsBody, HavokPlugin, TransformNode, PhysicsMaterialCombineMode, AbstractMesh, Mesh } from "@babylonjs/core";
 import { Box } from "./models/Box";
 import { Plank } from "./models/Plank";
 import { Sky } from "./models/Sky";
@@ -6,6 +6,7 @@ import { NetForceVectorLine } from "./models/NetForceVectorLine";
 import { IObjectsController } from "../application/interfaces/IObjectsController";
 import { GameController, GameState } from "../application/GameController";
 import { IGUIController } from "../presentation/GUIController";
+import { BoxPointManager } from "./models/BoxPointManager";
 
 
 export class ObjectsController implements IObjectsController {
@@ -28,6 +29,9 @@ export class ObjectsController implements IObjectsController {
     public boxStaticFriction: number;
     public boxFriction: number;
     public boxRestitution: number;
+    private boxPointManager: BoxPointManager;
+    private boxPointNode: TransformNode;
+    private boxPointArray: Mesh[] = [];
     
 
     constructor(scene: Scene, camera: FollowCamera, physicsPlugin: HavokPlugin, guiController: IGUIController, gameController: GameController) {
@@ -37,6 +41,8 @@ export class ObjectsController implements IObjectsController {
         this._guiController = guiController;
         this._gameController = gameController;
         this._planksNode = new TransformNode("Planks", this._scene);
+        this.boxPointNode = new TransformNode("boxPNode", this._scene);
+        this.boxPointManager = new BoxPointManager(this._scene, this.boxPointNode,this.boxPointArray);
         this.maxDistanceX = 0;
         this.boxFriction = 0.65;
         this.boxStaticFriction = 0.7;
@@ -68,6 +74,19 @@ export class ObjectsController implements IObjectsController {
         let lastBoxLinearVelocity = this._box.physicsBody.getLinearVelocity();
 
         this._scene.onBeforeRenderObservable.add(() => {
+            if(iFramesCount%10 === 0){
+                for (let i = this.boxPointArray.length - 1; i >= 0; i--) {
+                    const mesh = this.boxPointArray[i];
+                    // Verifica se o nome do mesh contém o sufixo esperado e se está próximo da caixa
+                    if (mesh.position.subtract(this._box.mesh.position).length() < 1.5) {
+                        console.log(`Removendo: ${mesh.name} ${mesh.visibility}`);
+                        mesh.position.z = -1000;
+                    }
+                }
+            }
+
+        
+
             this._camera.position.z = -50;
             if (this._guiController.buttonLeftIsDown) {
                 this.rotatePlank(1);
@@ -112,13 +131,16 @@ export class ObjectsController implements IObjectsController {
 
     private createPlanks() {
         for (let i = 0; i < 100; i++) {
-            const plank = new Plank(i, this._scene, new Vector3(41 * i, -7.5 * i + 2.5, 0), { size: 4, width: 42, height: 0.5 }, 1, 0.01);
+            const plankPosition = new Vector3(41 * i, -7.5 * i + 2.5, 0)
+            const plank = new Plank(i, this._scene,plankPosition , { size: 4, width: 42, height: 0.5 }, 1, 0.01);
             if (i === 0) {
                 this._currentPlankPB = plank.physicsBody;
             }
             plank.mesh.parent = this._planksNode;
             this._planks.push(plank);
             this._physicsBodyToPlankMap.set(plank.physicsBody, plank); 
+            this.boxPointManager.createBoxesPoint(plankPosition);
+
         }
 
 
@@ -136,7 +158,7 @@ export class ObjectsController implements IObjectsController {
         this._camera.position = new Vector3(-500, -40, -20);
         this._box.physicsBody.disablePreStep = false;
         this._box.mesh.rotation = new Vector3(0, Math.PI, 0);
-        this._box.mesh.position = new Vector3(-20, 3.8, 0);
+        this._box.mesh.position = new Vector3(-18, 3.8, 0);
         this._scene.onAfterRenderObservable.addOnce(() => {
             this._box.physicsBody.disablePreStep = true;
             this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction);
@@ -219,5 +241,11 @@ export class ObjectsController implements IObjectsController {
             this._physicsEngine.setAngularVelocity(this._currentPlankPB, new Vector3(0, 0, 0.1 * direction * this._rotationSpeed));
         }
         this.angleCurrentPlank = -this._currentPlankPB.transformNode.rotation.z*180/Math.PI;
+    }
+    public resetBoxPointPositions(){
+        for (let i = this.boxPointArray.length - 1; i >= 0; i--) {
+            const mesh = this.boxPointArray[i];
+            mesh.position.z = 0;
+        }
     }
 }

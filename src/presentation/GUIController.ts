@@ -127,6 +127,7 @@ export class GUIController implements IGUIController {
             //this._textblockMenuBest.text = `${this._levelMediator.gameData.highScore}`;
             this._objectsController.resetBoxState();
             this._objectsController.resetPlanksOrientation();
+            this._objectsController.resetBoxPointPositions();
         });
 
 

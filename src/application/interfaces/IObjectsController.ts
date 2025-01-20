@@ -1,4 +1,5 @@
 export interface IObjectsController {
+    resetBoxPointPositions(): unknown;
     angleCurrentPlank: number;
     maxDistanceX: number;
     boxStaticFriction: number;
