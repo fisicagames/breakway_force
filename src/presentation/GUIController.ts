@@ -57,10 +57,30 @@ export class GUIController implements IGUIController {
         }
         this._textblockTotalScore.text = this._guiLanguage.getCurrentLanguage() === 0 ? 
         `Recorde: ${this._highScore.toFixed(0)}`:`Record: ${this._highScore.toFixed(0)}`;
-        this._textblockMenuBest.text = `${this._highScore.toFixed(0)}`;
+        this._textblockMenuBest.text = this.getScoreDisplay(this._highScore);
         this._rectangleGame.isVisible = true;
-
-
+    }
+    private getScoreDisplay(score: number): string {
+        if (score < 100) {
+            return `${score}`;
+        } else if (score < 300) {
+            return `${score} 🥉`; 
+        } else if (score < 600) {
+            return `${score} 🥈`; 
+        } else {
+            return `${score} 🥇`; 
+        }
+    }
+    private getPointsDisplay(score: number): string {
+        if (score < 100) {
+            return `${score}/100`;
+        } else if (score < 300) {
+            return `${score}/300 🥉`; 
+        } else if (score < 600) {
+            return `${score}/600 🥈`; 
+        } else {
+            return `${score} 🥇`; 
+        }
     }
     public setObjectsController(objectsController: IObjectsController): void {
         this._objectsController = objectsController;
@@ -95,7 +115,7 @@ export class GUIController implements IGUIController {
     }
     public updateGUI() {
         this._textblockLevel.text =  this._guiLanguage.getCurrentLanguage() === 0 ?
-        `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`:`Points: ${this._objectsController.maxDistanceX.toFixed(0)}`;
+        `Pontos: ${this.getPointsDisplay(this._objectsController.maxDistanceX)}`:`Points: ${this.getPointsDisplay(this._objectsController.maxDistanceX)}`;
         this._textBlockEquation.text = `μₑ = ${this._objectsController.boxStaticFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxStaticFriction)*180/Math.PI).toFixed(1)}°) e   μ𝒸 = ${this._objectsController.boxFriction.toFixed(2)} (${(Math.atan(this._objectsController.boxFriction)*180/Math.PI).toFixed(1)}°)`
         this._textblockAngle.text =  this._guiLanguage.getCurrentLanguage() === 0 ?
         `𝜃 = ${this._objectsController.angleCurrentPlank.toFixed(1)}°    Coeficiente de restituição: ${this._objectsController.boxRestitution.toFixed(2)} `:
@@ -175,6 +195,7 @@ export class GUIController implements IGUIController {
         });
 
         this._buttonMenu.onPointerUpObservable.add(() => {
+            this.endGame();
             this._rectangleMenu.isVisible = true;
             this._textblockLevel.isVisible = false;
             this._rectangleGame.isVisible = false;
