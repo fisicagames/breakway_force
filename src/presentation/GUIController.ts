@@ -9,6 +9,7 @@ export interface IGUIController {
     updateGUI();
     buttonLeftIsDown: boolean;
     buttonRightIsDown: boolean;
+    soundBoxPOint: SoundLoader;
 }
 export class GUIController implements IGUIController {
 
@@ -29,6 +30,8 @@ export class GUIController implements IGUIController {
     private _rectangleTouch: Rectangle;
     private _rectangleTop: Rectangle;
     private _soundTrack: SoundLoader;
+    public soundBoxPOint: SoundLoader;
+    private _soundGameOver: SoundLoader;
     private _allSounds: SoundLoader[] = [];
     private _textblockMenuMusic: TextBlock;
     private _buttonMenuContinuar: Button;
@@ -45,6 +48,8 @@ export class GUIController implements IGUIController {
     
 
     public endGame() {
+        this._soundTrack.pause();
+        this._soundGameOver.play();
         this._textblockScoreGame.text = this._guiLanguage.getCurrentLanguage() === 0 ?
         `Pontos: ${this._objectsController.maxDistanceX.toFixed(0)}`:`Points: ${this._objectsController.maxDistanceX.toFixed(0)}`
         if( this._highScore < this._objectsController.maxDistanceX){
@@ -65,9 +70,23 @@ export class GUIController implements IGUIController {
         this._advancedTexture = advancedTexture;
         this._guiSetup();
         this._guiButtonsSetup();
+        
         this._soundTrack = new SoundLoader(this._advancedTexture.getScene(),
-            "soundBoatEngine", "./assets/sounds/big-band-show-146321.mp3", true);
+            "soundBoatEngine", "./assets/sounds/big-band-show-146321-compress.mp3", true);
         this._allSounds.push(this._soundTrack);
+        
+        this.soundBoxPOint = new SoundLoader(this._advancedTexture.getScene(),
+            "soundBoatEngine", "./assets/sounds/scale-e6-14577-compress.mp3", false);
+        this.soundBoxPOint.setLoop(false);
+        this.soundBoxPOint.setVolume(1.0);
+        this._allSounds.push(this.soundBoxPOint);
+        
+        this._soundGameOver = new SoundLoader(this._advancedTexture.getScene(),
+            "soundBoatEngine", "./assets/sounds/videogame-death-sound-43894-compress.mp3", false);
+        this._soundGameOver.setLoop(false);
+        this._soundGameOver.setVolume(1.0);
+        this._allSounds.push(this._soundGameOver);
+
         this._guiLanguage = new GuiLanguage();
         this._guiLanguage.updateText(this._advancedTexture);
         //Feature added on 2024-12-13: Automatically set the language based on the browser's settings.
@@ -125,6 +144,7 @@ export class GUIController implements IGUIController {
         this._buttonMenuContinuar.onPointerUpObservable.add(() => {
             this._rectangleGameContinue.isVisible = false;
             //this._textblockMenuBest.text = `${this._levelMediator.gameData.highScore}`;
+            this._soundTrack.play();            
             this._objectsController.resetBoxState();
             this._objectsController.resetPlanksOrientation();
             this._objectsController.resetBoxPointPositions();
@@ -143,6 +163,8 @@ export class GUIController implements IGUIController {
         this._buttonMenuStart.onPointerUpObservable.add(() => {
             this._objectsController.resetBoxState();
             this._objectsController.resetPlanksOrientation();
+            this._objectsController.resetBoxPointPositions();
+            this._soundTrack.play();
             this._rectangleMenu.isVisible = false;
             this._textblockLevel.isVisible = true;
             this._rectangleTouch.isVisible = true;

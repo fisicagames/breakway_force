@@ -80,6 +80,8 @@ export class ObjectsController implements IObjectsController {
                     // Verifica se o nome do mesh contém o sufixo esperado e se está próximo da caixa
                     if (mesh.position.subtract(this._box.mesh.position).length() < 1.5) {
                         console.log(`Removendo: ${mesh.name} ${mesh.visibility}`);
+                        this.maxDistanceX += 10;
+                        this._guiController.soundBoxPOint.play();
                         mesh.position.z = -1000;
                     }
                 }
@@ -202,7 +204,7 @@ export class ObjectsController implements IObjectsController {
                 this.boxRestitution < 1.01 ? this.boxRestitution = 0.01 + 0.01 *this._currentPlank.index: 1.00;
                 this.setPhysicsMaterialToBox(this.boxStaticFriction,this.boxFriction, this.boxRestitution);
             }
-            this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
+            //this.maxDistanceX = Math.max(this.maxDistanceX, this._box.mesh.position.x);
             this._guiController.updateGUI();
         });
     }
