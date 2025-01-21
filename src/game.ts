@@ -1,6 +1,6 @@
 import { CanvasInitializer } from "./infrastructure/scene/CanvasInitializer";
 import { EngineInitializer } from "./infrastructure/scene/EngineInitializer";
-import { InspectorDebugModel } from "./infrastructure/scene/InspectorDebugModel";
+//import { InspectorDebugModel } from "./infrastructure/scene/InspectorDebugModel";
 import { SceneInitializer } from "./infrastructure/scene/SceneInitializer";
 
 export class Game {
@@ -8,7 +8,7 @@ export class Game {
         const canvas = CanvasInitializer.createAndAdjustCanvas();
         const engine = EngineInitializer.createEngine(canvas);
         const mainScene = new SceneInitializer(canvas, engine);
-        InspectorDebugModel.enable(mainScene.scene); //Shift+d
+        //InspectorDebugModel.enable(mainScene.scene); //Shift+d
     }
 }
 
