@@ -1,121 +1,168 @@
-# Friction Skill
+# Friction Skill 📦
 
-## Descrição
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-blue.svg)](https://www.typescriptlang.org/)
+[![Babylon.js](https://img.shields.io/badge/Babylon.js-7.5.0-purple.svg)](https://www.babylonjs.com/)
+[![Vite](https://img.shields.io/badge/Vite-5.2.11-yellow.svg)](https://vitejs.dev/)
 
-**Friction Skill** é um jogo no formato de simulação de física casual que desafia o jogador a mover uma caixa de um plano inclinado para outro, controlando apenas o ângulo de inclinação dos planos. O jogo utiliza simulações avançadas de atrito estático, atrito cinético e coeficiente de restituição, proporcionando uma experiência única e interativa sobre conceitos básicos de física. 
+A casual physics simulation on static and kinetic friction over inclined planes — the first SHIFT simulation to integrate the **Havok physics engine** and a Clean Architecture-inspired layered design.
 
----
-
-## Como Jogar
-
-1. Controle o ângulo de inclinação dos planos usando:
-   * Dois botões na tela (sentido horário e anti-horário).
-   * Ou as setas esquerda e direita no teclado.
-2. Movimente a caixa principal de um plano inclinado para o próximo.
-3. Colete as caixas douradas para ganhar pontos.
-4. Evite deixar a caixa cair antes de alcançar o próximo plano inclinado.
+### [🎮 Play Now!](https://fisicagames.com.br/)
 
 ---
 
-## Funcionalidades
+## 📄 Table of Contents
 
-* **Sistema de Pontuação:**
-* Caixas douradas coletadas valem **10 pontos** cada.
-* Medalhas baseadas na pontuação total:
-  * **Prata** : 100 pontos.
-  * **Bronze** : 300 pontos.
-  * **Ouro** : 600 pontos ou mais.
-* **Dinâmica Física Realista**:
-* Representação realista da troca entre atrito estático máximo e cinético.
-* Coeficiente de restituição crescente a cada plano, criando desafios únicos.
-* **Jogabilidade Minimalista**:
-* Cenário limpo e intuitivo, com foco na simulação da física.
-* **Compatibilidade**:
-* Suporte para navegadores e dispositivos móveis, com jogabilidade otimizada para a posição retrato em celulares.
+* [About the Game](#-about-the-game)
+* [Key Features](#-key-features)
+* [How to Play](#-how-to-play)
+* [Tech Stack](#-tech-stack)
+* [Installation and Setup](#-installation-and-setup)
+* [Architecture and Technical Highlights](#-architecture-and-technical-highlights)
+* [License](#-license)
+* [Author](#-author)
 
 ---
 
-## Desafio
+## 📖 About the Game
 
-O principal desafio do jogo é controlar a caixa quando o atrito diminui e o coeficiente de restituição aumenta, tornando a tarefa de atravessar os planos inclinados mais difícil. Precisão e estratégia são essenciais para avançar sem deixar a caixa cair.
+**Friction Skill** is the fourth simulation of the SHIFT series, developed in June 2024. It challenges players to move a box from one inclined plane to another by controlling only the inclination angle of each plane. The game uses realistic simulations of static friction (μₛ), kinetic friction (μₖ), and the coefficient of restitution, all computed by the **Havok physics engine**.
 
----
+The main challenge is to control the box as friction decreases and the coefficient of restitution increases at each successive plane, making the task progressively more difficult. Precision and timing are essential to advance without dropping the box.
 
-## Público-Alvo
-
-Este jogo foi projetado para jovens e adultos curiosos que buscam explorar conceitos de física de maneira casual e interativa. Ideal tanto para finalidades recreativas quanto educativas, sem necessidade de conhecimento prévio.
+This was the first simulation in the series to use a third-party rigid-body physics engine, marking an important shift from the manual physics modeling of the previous simulations.
 
 ---
 
-## Telas do Jogo
+## ✨ Key Features
 
-![1737466783770](image/README/1737466783770.png) ![1737466867120](image/README/1737466867120.png)![1737466910692](image/README/1737466910692.png) ![1737466976742](image/README/1737466976742.png)
-
----
-
-## Requisitos para Rodar o Jogo
-
-* **Navegadores Compatíveis** : Qualquer navegador moderno com suporte a WebGL.
-* **Dispositivos** : Computadores, tablets e dispositivos móveis (modo retrato).
-
----
-
-## Tecnologias Utilizadas
-
-* **TypeScript**: Linguagem de programação.
-* **Babylon.js**: Motor gráfico 3D.
-* **Havok**: Motor de física para simulações realistas.
-* **Vite.js**: Ferramenta para build e desenvolvimento.
-* **VS Code**: Editor de código.
-* **GitHub**: Plataforma de controle de versão.
+* **Realistic Friction Dynamics (via Havok):**
+  * Realistic transition between maximum static friction and kinetic friction.
+  * Increasing coefficient of restitution at each plane, creating progressively harder challenges.
+* **Score System:**
+  * Golden boxes collected: **10 points** each.
+  * Medals based on total score:
+    * 🥈 **Silver:** 100 points.
+    * 🥉 **Bronze:** 300 points.
+    * 🥇 **Gold:** 600+ points.
+* **Real-Time Force Visualization:** A vector representing the net force on the box is rendered on screen, computed from the change in linear velocity provided by the Havok engine.
+* **Minimalist Design:** Clean scenery focused on the physics simulation.
+* **Cross-Platform:** Optimized for browsers and mobile devices in portrait orientation.
 
 ---
 
-## Instalação
+## 🕹 How to Play
 
-### Pré-requisitos
+**Objective:** Move the main box from one inclined plane to the next, collecting golden boxes for points.
 
-Certifique-se de ter instalado:
+#### Controls
 
-* Node.js
-* npm
+💻 **On PC:** Arrow keys (`◄` / `►`) to adjust the inclination angle of the planes (counterclockwise / clockwise).
 
-### Passo a Passo
+📱 **On Mobile / Touch:** Two on-screen buttons to adjust inclination in both directions.
 
-1. Clone este repositório ou faça o download dos arquivos.
-2. Instale as dependências:
-   <pre class="!overflow-visible"><div class="contain-inline-size rounded-md border-[0.5px] border-token-border-medium relative bg-token-sidebar-surface-primary dark:bg-gray-950"><div class="flex items-center text-token-text-secondary px-4 py-2 text-xs font-sans justify-between rounded-t-md h-9 bg-token-sidebar-surface-primary dark:bg-token-main-surface-secondary select-none">bash</div><div class="sticky top-9 md:top-[5.75rem]"><div class="absolute bottom-0 right-2 flex h-9 items-center"><div class="flex items-center rounded bg-token-sidebar-surface-primary px-2 font-sans text-xs text-token-text-secondary dark:bg-token-main-surface-secondary"><span class="" data-state="closed"><button class="flex gap-1 items-center select-none px-4 py-1" aria-label="Copiar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 5C7 3.34315 8.34315 2 10 2H19C20.6569 2 22 3.34315 22 5V14C22 15.6569 20.6569 17 19 17H17V19C17 20.6569 15.6569 22 14 22H5C3.34315 22 2 20.6569 2 19V10C2 8.34315 3.34315 7 5 7H7V5ZM9 7H14C15.6569 7 17 8.34315 17 10V15H19C19.5523 15 20 14.5523 20 14V5C20 4.44772 19.5523 4 19 4H10C9.44772 4 9 4.44772 9 5V7ZM5 9C4.44772 9 4 9.44772 4 10V19C4 19.5523 4.44772 20 5 20H14C14.5523 20 15 19.5523 15 19V10C15 9.44772 14.5523 9 14 9H5Z" fill="currentColor"></path></svg>Copiar</button></span><span class="" data-state="closed"><button class="flex select-none items-center gap-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path d="M2.5 5.5C4.3 5.2 5.2 4 5.5 2.5C5.8 4 6.7 5.2 8.5 5.5C6.7 5.8 5.8 7 5.5 8.5C5.2 7 4.3 5.8 2.5 5.5Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.66282 16.5231L5.18413 19.3952C5.12203 19.7678 5.09098 19.9541 5.14876 20.0888C5.19933 20.2067 5.29328 20.3007 5.41118 20.3512C5.54589 20.409 5.73218 20.378 6.10476 20.3159L8.97693 19.8372C9.72813 19.712 10.1037 19.6494 10.4542 19.521C10.7652 19.407 11.0608 19.2549 11.3343 19.068C11.6425 18.8575 11.9118 18.5882 12.4503 18.0497L20 10.5C21.3807 9.11929 21.3807 6.88071 20 5.5C18.6193 4.11929 16.3807 4.11929 15 5.5L7.45026 13.0497C6.91175 13.5882 6.6425 13.8575 6.43197 14.1657C6.24513 14.4392 6.09299 14.7348 5.97903 15.0458C5.85062 15.3963 5.78802 15.7719 5.66282 16.5231Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 7L18.5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Editar</button></span></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="!whitespace-pre hljs language-bash">npm install
-   </code></div></div></pre>
-3. Para iniciar o servidor de desenvolvimento:
-   <pre class="!overflow-visible"><div class="contain-inline-size rounded-md border-[0.5px] border-token-border-medium relative bg-token-sidebar-surface-primary dark:bg-gray-950"><div class="flex items-center text-token-text-secondary px-4 py-2 text-xs font-sans justify-between rounded-t-md h-9 bg-token-sidebar-surface-primary dark:bg-token-main-surface-secondary select-none">bash</div><div class="sticky top-9 md:top-[5.75rem]"><div class="absolute bottom-0 right-2 flex h-9 items-center"><div class="flex items-center rounded bg-token-sidebar-surface-primary px-2 font-sans text-xs text-token-text-secondary dark:bg-token-main-surface-secondary"><span class="" data-state="closed"><button class="flex gap-1 items-center select-none px-4 py-1" aria-label="Copiar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 5C7 3.34315 8.34315 2 10 2H19C20.6569 2 22 3.34315 22 5V14C22 15.6569 20.6569 17 19 17H17V19C17 20.6569 15.6569 22 14 22H5C3.34315 22 2 20.6569 2 19V10C2 8.34315 3.34315 7 5 7H7V5ZM9 7H14C15.6569 7 17 8.34315 17 10V15H19C19.5523 15 20 14.5523 20 14V5C20 4.44772 19.5523 4 19 4H10C9.44772 4 9 4.44772 9 5V7ZM5 9C4.44772 9 4 9.44772 4 10V19C4 19.5523 4.44772 20 5 20H14C14.5523 20 15 19.5523 15 19V10C15 9.44772 14.5523 9 14 9H5Z" fill="currentColor"></path></svg>Copiar</button></span><span class="" data-state="closed"><button class="flex select-none items-center gap-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path d="M2.5 5.5C4.3 5.2 5.2 4 5.5 2.5C5.8 4 6.7 5.2 8.5 5.5C6.7 5.8 5.8 7 5.5 8.5C5.2 7 4.3 5.8 2.5 5.5Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.66282 16.5231L5.18413 19.3952C5.12203 19.7678 5.09098 19.9541 5.14876 20.0888C5.19933 20.2067 5.29328 20.3007 5.41118 20.3512C5.54589 20.409 5.73218 20.378 6.10476 20.3159L8.97693 19.8372C9.72813 19.712 10.1037 19.6494 10.4542 19.521C10.7652 19.407 11.0608 19.2549 11.3343 19.068C11.6425 18.8575 11.9118 18.5882 12.4503 18.0497L20 10.5C21.3807 9.11929 21.3807 6.88071 20 5.5C18.6193 4.11929 16.3807 4.11929 15 5.5L7.45026 13.0497C6.91175 13.5882 6.6425 13.8575 6.43197 14.1657C6.24513 14.4392 6.09299 14.7348 5.97903 15.0458C5.85062 15.3963 5.78802 15.7719 5.66282 16.5231Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 7L18.5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Editar</button></span></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="!whitespace-pre hljs language-bash">npm run dev
-   </code></div></div></pre>
-4. Para gerar os arquivos de distribuição:
-   <pre class="!overflow-visible"><div class="contain-inline-size rounded-md border-[0.5px] border-token-border-medium relative bg-token-sidebar-surface-primary dark:bg-gray-950"><div class="flex items-center text-token-text-secondary px-4 py-2 text-xs font-sans justify-between rounded-t-md h-9 bg-token-sidebar-surface-primary dark:bg-token-main-surface-secondary select-none">bash</div><div class="sticky top-9 md:top-[5.75rem]"><div class="absolute bottom-0 right-2 flex h-9 items-center"><div class="flex items-center rounded bg-token-sidebar-surface-primary px-2 font-sans text-xs text-token-text-secondary dark:bg-token-main-surface-secondary"><span class="" data-state="closed"><button class="flex gap-1 items-center select-none px-4 py-1" aria-label="Copiar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 5C7 3.34315 8.34315 2 10 2H19C20.6569 2 22 3.34315 22 5V14C22 15.6569 20.6569 17 19 17H17V19C17 20.6569 15.6569 22 14 22H5C3.34315 22 2 20.6569 2 19V10C2 8.34315 3.34315 7 5 7H7V5ZM9 7H14C15.6569 7 17 8.34315 17 10V15H19C19.5523 15 20 14.5523 20 14V5C20 4.44772 19.5523 4 19 4H10C9.44772 4 9 4.44772 9 5V7ZM5 9C4.44772 9 4 9.44772 4 10V19C4 19.5523 4.44772 20 5 20H14C14.5523 20 15 19.5523 15 19V10C15 9.44772 14.5523 9 14 9H5Z" fill="currentColor"></path></svg>Copiar</button></span><span class="" data-state="closed"><button class="flex select-none items-center gap-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-xs"><path d="M2.5 5.5C4.3 5.2 5.2 4 5.5 2.5C5.8 4 6.7 5.2 8.5 5.5C6.7 5.8 5.8 7 5.5 8.5C5.2 7 4.3 5.8 2.5 5.5Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.66282 16.5231L5.18413 19.3952C5.12203 19.7678 5.09098 19.9541 5.14876 20.0888C5.19933 20.2067 5.29328 20.3007 5.41118 20.3512C5.54589 20.409 5.73218 20.378 6.10476 20.3159L8.97693 19.8372C9.72813 19.712 10.1037 19.6494 10.4542 19.521C10.7652 19.407 11.0608 19.2549 11.3343 19.068C11.6425 18.8575 11.9118 18.5882 12.4503 18.0497L20 10.5C21.3807 9.11929 21.3807 6.88071 20 5.5C18.6193 4.11929 16.3807 4.11929 15 5.5L7.45026 13.0497C6.91175 13.5882 6.6425 13.8575 6.43197 14.1657C6.24513 14.4392 6.09299 14.7348 5.97903 15.0458C5.85062 15.3963 5.78802 15.7719 5.66282 16.5231Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 7L18.5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Editar</button></span></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="!whitespace-pre hljs language-bash">npm run build
-   </code></div></div></pre>
+**Tips:**
+
+* Watch the friction transitions carefully — the static-to-kinetic transition is the key moment.
+* Avoid letting the box fall before reaching the next plane.
 
 ---
 
-## Licença de Uso e Distribuição
+## 🛠 Tech Stack
 
-**Copyright (c) 2025 Rafael João Ribeiro**
-
-### Direitos de Uso:
-
-* Distribuição permitida em sua forma original.
-* Uso comercial da versão publicada permitido, desde que não sejam feitas alterações no conteúdo.
-* Modificações no código-fonte ou redistribuição do mesmo são proibidas sem autorização explícita.
-
-### Aviso sobre Bibliotecas de Terceiros:
-
-Este projeto utiliza:
-
-* **Babylon.js** : Licenciado sob a Licença Apache 2.0.
-* **Vite.js** : Licenciado sob a Licença MIT.
+| Tool                                       | Version | Description                                                              |
+| ------------------------------------------ | ------- | ------------------------------------------------------------------------ |
+| [TypeScript](https://www.typescriptlang.org/) | 5.7.2   | Core language, providing type safety and modular architecture.           |
+| [Babylon.js](https://www.babylonjs.com/)      | 7.5.0   | Graphics engine for 3D rendering, animations, and GUI system.            |
+| [Havok](https://www.havok.com/)               | latest  | Industry-grade physics engine for realistic rigid-body interactions.     |
+| [Vite.js](https://vitejs.dev/)                | 5.2.11  | Build tool for ES6 module compilation, tree-shaking, and optimization.   |
+| [Node.js](https://nodejs.org/en)              | 20+     | Development environment and runtime.                                     |
 
 ---
 
-## Autor
+## 🚀 Installation and Setup
 
+**Prerequisites:** Node.js (v20+), npm (v10+).
+
+```sh
+npm install
+npm run dev      # development server
+npm run build    # production build (generates the dist folder)
+```
+
+---
+
+## 🏗 Architecture and Technical Highlights
+
+**Friction Skill** introduced two important changes to the SHIFT codebase: the integration of the **Havok physics engine** and an architectural shift inspired by **Clean Architecture and Domain-Driven Design (DDD)**.
+
+The project adopts a four-layer folder structure inspired by Eric Evans' DDD diagram:
+
+```
+src/
+├── presentation/      — User interaction and GUI
+├── application/       — High-level game logic and state coordination
+├── domain/            — Physics modeling and game-specific entities
+└── infrastructure/    — External tools (Havok, scene setup, optimizers)
+```
+
+* **Presentation layer:** GUI controllers, language detection, and input translation.
+* **Application layer:** `GameController` coordinates initialization, pause, and reset cycles, replacing the finite state machines used in earlier simulations.
+* **Domain layer:** `ObjectsController` manages the `Box` and `Plank` entities, computing the net force and adjusting μₛ and μₖ as the box advances.
+* **Infrastructure layer:** `HavokPhysicsEngine` adapts the Havok library for use within Babylon.js; scene initializers and a physics debugger support development.
+
+#### Physics Modeling
+
+* **Havok rigid-body simulation:** The main box is a 2×2×2 dynamic cube with mass 10. Initial coefficients: μₛ = 0.7, μₖ = 0.65, restitution = 0.01.
+* **Progressive parameter modulation:** As the box passes from plane to plane, the engine progressively decreases friction and increases restitution per plane index, simulating a transition from rough to slippery surfaces.
+* **Net force vector visualization:** Computed every 10 frames from `body.getLinearVelocity()` differences, scaled and rotated via `Quaternion.FromUnitVectorsToRef` to display the resulting force vector in 3D.
+
+#### A Note on the DDD Attempt
+
+The DDD organization was ultimately limited to folder structure. The conceptual machinery of DDD — bounded contexts, aggregates, domain events, and ubiquitous language — does not naturally map to a real-time physics simulation with no business rules. This insight motivated the abandonment of DDD in subsequent simulations, in favor of a lighter MVC pattern that proved more appropriate for this domain.
+
+Despite the limited applicability of DDD, the modular separation between physics logic and infrastructure delivered a real benefit: the simulation was completed in only **seven days** (specific development cycle), while consolidating Havok integration as a reusable technical pattern for the rest of the SHIFT series.
+
+---
+
+## 📸 Screenshots
+
+<p align="center">
+  <img src="image/README/1737466783770.png" width="22%" alt="Friction Skill screenshot 1" />
+  <img src="image/README/1737466867120.png" width="22%" alt="Friction Skill screenshot 2" />
+  <img src="image/README/1737466910692.png" width="22%" alt="Friction Skill screenshot 3" />
+  <img src="image/README/1737466976742.png" width="22%" alt="Friction Skill screenshot 4" />
+</p>
+
+---
+
+## 📜 License
+
+### Source Code
+
+The source code in this repository is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file.
+
+### Visual Assets
+
+3D models, textures, and original visual content created by the author are licensed under **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
+
+### Audio Assets
+
+Music and sound effects in this project are sourced from [Pixabay](https://pixabay.com/) under the [Pixabay Content License](https://pixabay.com/service/license-summary/), which permits free use including for commercial purposes.
+
+### Third-Party Libraries
+
+* **Babylon.js** — Apache License 2.0
+* **Havok Physics** — Per vendor terms (Babylon.js distribution)
+* **Vite.js** — MIT License
+
+**Copyright © 2024 Rafael João Ribeiro.**
+
+---
+
+## 👨‍🔬 Author
+
+Developed by:
 **Prof. Dr. Rafael João Ribeiro**
-Instituto Federal do Paraná (IFPR)
-[www.fisicagames.com.br](http://www.fisicagames.com.br)
+Federal Institute of Paraná (IFPR)
+[www.fisicagames.com.br](https://www.fisicagames.com.br)
